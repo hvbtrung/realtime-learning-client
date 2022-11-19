@@ -90,6 +90,15 @@ div.error {
   margin: 20px 0;
 }
 
+div.success {
+  padding: 10px;
+  background: #d7edd7;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
 input.error {
   border: 1px solid var(--error);
 }

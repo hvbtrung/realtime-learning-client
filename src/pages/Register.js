@@ -5,7 +5,7 @@ function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
-    const { register, isLoading, error } = useRegister();
+    const { register, isLoading, success, error } = useRegister();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,6 +40,15 @@ function Register() {
 
             <button disabled={isLoading}>Register</button>
             {error && <div className='error'>{error}</div>}
+            {success && (
+                <div className='success'>
+                    <h3>Success!</h3>
+                    <span>
+                        You have registered for your account.
+                        Check your email for your account activation link.
+                    </span>
+                </div>
+            )}
         </form>
     );
 }

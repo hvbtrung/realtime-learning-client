@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import axios from 'axios';
-import { useAuthContext } from './useAuthContext';
 
 export const useRegister = () => {
+    const [success, setSuccess] = useState(null);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(null);
-    const { dispatch } = useAuthContext();
 
     const register = async (email, password, name) => {
         setIsLoading(true);
+        setSuccess(null);
         setError(null);
 
         const url = process.env.REACT_APP_API_URL;
@@ -20,16 +20,14 @@ export const useRegister = () => {
 
         if (json.status === 'error') {
             setError(json.message);
+            setSuccess(false);
             setIsLoading(false);
         }
         if (json.status === 'success') {
-            localStorage.setItem('user', JSON.stringify(json.data.user));
-
-            dispatch({ type: 'LOGIN', payload: json.data.user });
-
+            setSuccess(true);
             setIsLoading(false);
         }
     }
 
-    return { register, isLoading, error };
+    return { register, isLoading, success, error };
 }
