@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 
-export default function GroupCard({ name, creatorName, id, style }) {
+export default function GroupCard({ owner, name, id, style, shortDesc }) {
   const concreteURL = `/group/${id}/detail-information`;
 
   return (
@@ -30,9 +30,20 @@ export default function GroupCard({ name, creatorName, id, style }) {
             transform: "translateY(-400%)",
           }}
         >
-          Lizard
+          {name}
         </Typography>
-
+        <Typography
+          gutterBottom
+          variant="span"
+          component="div"
+          sx={{
+            color: "white",
+            position: "absolute",
+            transform: "translateY(-350%)",
+          }}
+        >
+          {owner}
+        </Typography>
         <Typography
           variant="body2"
           color="text.secondary"
@@ -41,7 +52,7 @@ export default function GroupCard({ name, creatorName, id, style }) {
             color: "black",
           }}
         >
-          Nguyễn Trần Vinh
+          {shortDesc}
         </Typography>
       </CardContent>
       <CardActions>

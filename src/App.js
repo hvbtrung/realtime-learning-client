@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Group from "./components/group/Group.js";
+import { GroupContextProvider } from "../src/context/GroupContext";
 
 function App() {
   const { user } = useAuthContext();
@@ -18,8 +19,17 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={user ? <Home /> : <Navigate to="/login" />}
+              element={
+                user ? (
+                  <GroupContextProvider>
+                    <Home />
+                  </GroupContextProvider>
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
             />
+
             <Route
               path="/login"
               element={!user ? <Login /> : <Navigate to="/" />}

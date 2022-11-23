@@ -12,16 +12,17 @@ import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
 import CustomizedSnackbars from "../notification/snackbars";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { useGroupContext } from "../../hooks/useGroupContext";
 
 export default function ButtonCreation() {
-  const { user } = useAuthContext();
+  const { user, updateGroups, setUpdateGroups } = useAuthContext();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorNG, setAnchorNG] = React.useState(null);
   const [nameGroup, setnameGroup] = React.useState("");
   const [shortDesc, setShortDesc] = React.useState("");
   const [error, setError] = React.useState("");
   const [status, setStatus] = React.useState("");
-
+  const [noti, setNoti] = React.useState(false);
   const open = Boolean(anchorEl);
   const openNG = Boolean(anchorNG);
 
@@ -49,26 +50,27 @@ export default function ButtonCreation() {
 
   const submit = async () => {
     const url = process.env.REACT_APP_API_URL;
-    console.log("url", url);
 
     const response = await axios.post(`${url}/api/group`, {
       data: {
         nameGroup: nameGroup.trim(),
         shortDesc: shortDesc.trim(),
-        user: user._id,
+        userId: user._id,
       },
       withCredentials: true,
       validateStatus: () => true,
     });
 
-    console.log("response: ", response);
     const json = response.data;
 
     if (json.status == "success") {
       setStatus("success");
+      setUpdateGroups(!updateGroups);
     } else if (json.status == "error") {
       setStatus("error");
     }
+
+    setNoti(!noti);
   };
 
   return (
@@ -76,12 +78,14 @@ export default function ButtonCreation() {
       {status === "success" && (
         <CustomizedSnackbars
           type="success"
+          status={noti}
           message="Creating a new groupp successfully"
         />
       )}
       {status === "error" && (
         <CustomizedSnackbars
           type="error"
+          status={noti}
           message="Creating a group failure, please try again!"
         />
       )}

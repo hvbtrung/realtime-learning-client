@@ -7,14 +7,18 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function CustomizedSnackbars({ message, type }) {
+export default function CustomizedSnackbars({ message, type, status }) {
   const [open, setOpen] = React.useState(true);
+
+  React.useEffect(() => {
+    setOpen(true);
+  }, [status]);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-
+    console.log("vao nữa khong ");
     setOpen(false);
   };
 
