@@ -7,8 +7,16 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 
-export default function GroupCard({ owner, name, id, style, shortDesc }) {
-  const concreteURL = `/group/${id}/detail-information`;
+export default function GroupCard({ owner, name, id, shortDesc, role }) {
+  if (role === "ROLE_OWNER") {
+    role = "ronr";
+  } else if (role === "ROLE_MEMBER") {
+    role = "rmbr";
+  } else {
+    role = "rconr";
+  }
+
+  const concreteURL = `/group/detail-information/${id}?${role}`;
 
   return (
     <Card sx={{ maxWidth: 315 }}>

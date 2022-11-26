@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Group from "./components/group/Group.js";
 import { GroupContextProvider } from "../src/context/GroupContext";
+import { DetailGroupCtxProvider } from "./context/DetailGroupContext";
 
 function App() {
   const { user } = useAuthContext();
@@ -38,7 +39,14 @@ function App() {
               path="/signup"
               element={!user ? <Register /> : <Navigate to="/" />}
             />
-            <Route path="/group/:id/detail-information" element={<Group />} />
+            <Route
+              path="/group/detail-information/:id/"
+              element={
+                <DetailGroupCtxProvider>
+                  <Group />
+                </DetailGroupCtxProvider>
+              }
+            />
           </Routes>
         </div>
       </BrowserRouter>

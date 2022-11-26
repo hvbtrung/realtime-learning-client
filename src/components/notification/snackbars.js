@@ -18,7 +18,6 @@ export default function CustomizedSnackbars({ message, type, status }) {
     if (reason === "clickaway") {
       return;
     }
-    console.log("vao nữa khong ");
     setOpen(false);
   };
 

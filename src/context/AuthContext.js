@@ -18,6 +18,7 @@ export const AuthContextProvider = ({ children }) => {
     user: null,
   });
 
+  const [roleInGroup, setRoleInGroup] = useState("ROLE_MEMBER");
   const [updateGroups, setUpdateGroups] = useState(false);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, []);
 
-  console.log("AuthContext state: ", state);
+  // console.log("AuthContext state: ", state);
 
   return (
     <AuthContext.Provider

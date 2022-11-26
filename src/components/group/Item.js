@@ -4,31 +4,61 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
-export default function Item(props) {
+export default function Item({
+  nameMember,
+  isCheck,
+  setIsCheck,
+  id,
+  isDel,
+  photo,
+}) {
+  const handleClick = (e) => {
+    let { id, checked } = e.target;
+
+    setIsCheck([...isCheck, id]);
+    if (!checked) {
+      // checkbox is not checked
+      setIsCheck(isCheck.filter((item) => item !== id));
+    }
+  };
   return (
-    <Box>
-      <Box
-        className="Info-item"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          textAlign: "left",
-          justifyContent: "flex-start",
-          pl: 2,
-          mt: 2,
-          borderBottom: 0.001,
-          borderColor: "#cfcfcf",
-        }}
-      >
-        <div className="Info-item--img">
-          <Tooltip>
-            <IconButton>
-              <Avatar sx={{ width: 32, height: 32 }}>V</Avatar>
-            </IconButton>
-          </Tooltip>
+    <Box
+      className="Info-item"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        textAlign: "left",
+        justifyContent: "flex-start",
+        pl: 2,
+        borderBottom: 0.001,
+        borderColor: "#cfcfcf",
+      }}
+    >
+      {isDel == true ? (
+        <div style={{ paddingTop: "10px" }}>
+          <input
+            style={{ width: "20px", height: "20px" }}
+            type="checkbox"
+            id={id}
+            key={id}
+            checked={isCheck.includes(id)}
+            onChange={(e) => {
+              handleClick(e);
+            }}
+          />
         </div>
-        <div>{props.nameMember}</div>
-      </Box>
+      ) : (
+        ""
+      )}
+
+      <div className="Info-item--img">
+        <Tooltip>
+          <IconButton>
+            <Avatar sx={{ width: 32, height: 32 }} src={photo}></Avatar>
+          </IconButton>
+        </Tooltip>
+      </div>
+      <div>{nameMember}</div>
     </Box>
   );
 }

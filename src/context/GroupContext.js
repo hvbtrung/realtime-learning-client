@@ -1,4 +1,4 @@
-import { createContext, useReducer, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 
 import axios from "axios";

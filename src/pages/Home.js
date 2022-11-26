@@ -4,22 +4,22 @@ import { useContext } from "react";
 import GroupCard from "../components/customize/GroupCard";
 import * as React from "react";
 import Grid from "@mui/material/Grid";
-import { useGroupContext } from "../hooks/useGroupContext";
 import { GroupContext } from "../context/GroupContext";
 const Home = () => {
-  const { groups, update } = useContext(GroupContext);
+  const { groups } = useContext(GroupContext);
 
   return (
     <React.Fragment>
       <Grid container spacing={2} columns={{ xs: 8, sm: 4, md: 12 }}>
-        {groups.map((elm, idx) => {
+        {groups.map((elm) => {
           return (
             <Grid item xs={3} key={elm.groupId._id}>
               <GroupCard
-                id="5"
+                id={elm.groupId._id}
                 name={elm.groupId.name}
                 owner={elm.userId.name}
                 shortDesc={elm.groupId.shortDesc}
+                role={elm.role}
               />
             </Grid>
           );
