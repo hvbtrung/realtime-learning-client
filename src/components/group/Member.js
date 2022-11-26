@@ -130,7 +130,7 @@ export default function Member({ members, role, itsRole }) {
 
   // show checkbox select all for deleting members
   const showCheckboxDel = () => {
-    if (members.length == 0) {
+    if (members.length === 0) {
       setIsDel(false);
     }
     setIsDel(!isDel);
@@ -263,7 +263,7 @@ export default function Member({ members, role, itsRole }) {
           </Dialog>
         </Box>
 
-        {isDel == true ? (
+        {isDel === true ? (
           <div
             className="selectAll"
             style={{

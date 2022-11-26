@@ -9,11 +9,11 @@ import Link from "@mui/material/Link";
 
 export default function GroupCard({ owner, name, id, shortDesc, role }) {
   if (role === "ROLE_OWNER") {
-    role = "ronr";
+    role = "own";
   } else if (role === "ROLE_MEMBER") {
-    role = "rmbr";
+    role = "mem";
   } else {
-    role = "rconr";
+    role = "coown";
   }
 
   const concreteURL = `/group/detail-information/${id}?${role}`;

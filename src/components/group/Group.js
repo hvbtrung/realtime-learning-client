@@ -20,10 +20,10 @@ export default function Group() {
     let search = window.location.search.slice(1);
 
     switch (search) {
-      case "ronr":
+      case "own":
         setRole("ROLE_OWNER");
         break;
-      case "rconr":
+      case "coown":
         setRole("ROLE_COOWNER");
         break;
       default:
