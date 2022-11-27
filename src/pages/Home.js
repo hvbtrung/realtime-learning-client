@@ -11,22 +11,26 @@ const Home = () => {
 
   return (
     <React.Fragment>
-      <Grid container spacing={2} columns={{ xs: 8, sm: 4, md: 12 }}>
-        {groups.map((elm) => {
-          return (
-            <Grid item xs={3} key={elm.groupId._id}>
-              <GroupCard
-                id={elm.groupId._id}
-                name={elm.groupId.name}
-                owner={elm.userId.name}
-                shortDesc={elm.groupId.shortDesc}
-                role={elm.role}
-                link={elm.groupId._id}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
+      {groups.length === 0 ? (
+        <h3>You don't join any group</h3>
+      ) : (
+        <Grid container spacing={2} columns={{ xs: 8, sm: 4, md: 12 }}>
+          {groups.map((elm) => {
+            return (
+              <Grid item xs={3} key={elm.groupId._id}>
+                <GroupCard
+                  id={elm.groupId._id}
+                  name={elm.groupId.name}
+                  owner={elm.userId.name}
+                  shortDesc={elm.groupId.shortDesc}
+                  role={elm.role}
+                  link={elm.groupId._id}
+                />
+              </Grid>
+            );
+          })}
+        </Grid>
+      )}
     </React.Fragment>
   );
 };

@@ -54,10 +54,10 @@ export default function GroupCard({ name, id, shortDesc, role, link }) {
       validateStatus: () => true,
     });
 
-    console.log(response.data);
     if (response.data.status === "success") {
       setStatus("success");
       setMessage(response.data.message);
+      setEmail("");
     } else {
       setStatus("error");
       setMessage(response.data.message);
@@ -72,10 +72,8 @@ export default function GroupCard({ name, id, shortDesc, role, link }) {
     sendMail();
   };
 
-  // ${process.env.REACT_APP_DOMAIN}
   link = `${process.env.REACT_APP_DOMAIN}/group/join?${link}`;
   const concreteURL = `/group/detail-information/${id}?${role}`;
-  console.log(email);
   return (
     <Card sx={{ maxWidth: 315 }}>
       {status === "success" && (

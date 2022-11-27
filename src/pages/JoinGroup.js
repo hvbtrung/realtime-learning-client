@@ -11,10 +11,11 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import CustomizedSnackbars from "../components/notification/snackbars";
+import { useNavigate } from "react-router-dom";
 
 export const JoinGroup = () => {
+  let navigate = useNavigate();
   const { user } = useAuthContext();
-
   const [group, setGroup] = useState({});
   const [status, setStatus] = useState(false);
   const [noti, setNoti] = useState(false);
@@ -35,13 +36,15 @@ export const JoinGroup = () => {
           role: "ROLE_MEMBER",
         },
       });
+      console.log(response.data);
 
       if (response.data.status === "error") {
         setStatus("error");
         setMessage(response.data.message);
-        setNoti(!noti);
+        return setNoti(!noti);
       }
-      console.log(response.data);
+
+      return navigate(`/group/detail-information/${groupId}?mem`);
     } catch (e) {
       console.error("error get group", e);
     }
