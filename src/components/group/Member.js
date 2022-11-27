@@ -21,6 +21,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+export const validateEmail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
+
 export default function Member({ members, role, itsRole }) {
   const { user } = useAuthContext();
   const [email, setEmail] = React.useState("");
@@ -56,14 +64,6 @@ export default function Member({ members, role, itsRole }) {
 
   const handleCloseDelDialog = () => {
     setIsOpenDelDialog(false);
-  };
-
-  const validateEmail = (email) => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
   };
 
   // function add member
@@ -109,6 +109,7 @@ export default function Member({ members, role, itsRole }) {
       data: {
         userIds: isCheck,
         groupId: groupId,
+        ownerId: user._id,
       },
       withCredentials: true,
       validateStatus: () => true,
@@ -159,6 +160,12 @@ export default function Member({ members, role, itsRole }) {
   };
 
   const handleSubmitDeletion = () => {
+    if (isCheck.length === 0) {
+      setStatus("error");
+      setMessage("You don't select anyone");
+      handleCloseDelDialog();
+      return setNoti(!noti);
+    }
     detachMember();
   };
 
@@ -195,14 +202,28 @@ export default function Member({ members, role, itsRole }) {
                 <MoreVertIcon
                   onClick={showCheckboxDel}
                   style={isDel ? openDelStyle : {}}
-                  sx={{ mr: 2, borderColor: "rgb(194,100,1)" }}
+                  sx={{
+                    mr: 2,
+                    borderColor: "rgb(194,100,1)",
+                    "&:hover": {
+                      backgroundColor: "#cfcfcf",
+                      opacity: [0.9, 0.8, 0.7],
+                    },
+                  }}
                   className="moreverticon"
                 />
               ) : (
                 ""
               )}
               {/* button add  */}
-              <GroupAddIcon onClick={handleOpenAddDialog} />
+              <GroupAddIcon
+                sx={{
+                  "&:hover": {
+                    opacity: [0.9, 0.8, 0.7],
+                  },
+                }}
+                onClick={handleOpenAddDialog}
+              />
             </div>
           ) : (
             ""

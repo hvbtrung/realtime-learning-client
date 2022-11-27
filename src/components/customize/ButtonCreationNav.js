@@ -12,13 +12,12 @@ import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
 import CustomizedSnackbars from "../notification/snackbars";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { useGroupContext } from "../../hooks/useGroupContext";
 
 export default function ButtonCreation() {
   const { user, updateGroups, setUpdateGroups } = useAuthContext();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorNG, setAnchorNG] = React.useState(null);
-  const [nameGroup, setnameGroup] = React.useState("");
+  const [nameGroup, setNameGroup] = React.useState("");
   const [shortDesc, setShortDesc] = React.useState("");
   const [error, setError] = React.useState("");
   const [status, setStatus] = React.useState("");
@@ -29,7 +28,7 @@ export default function ButtonCreation() {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = (event) => {
+  const handleClose = () => {
     setAnchorEl(null);
   };
 
@@ -39,7 +38,7 @@ export default function ButtonCreation() {
   };
 
   const handleValidation = () => {
-    if (nameGroup.trim().length == 0 || shortDesc.trim().length == 0) {
+    if (nameGroup.trim().length === 0 || shortDesc.trim().length === 0) {
       setError("Please fill out all of the field");
       return;
     }
@@ -63,10 +62,12 @@ export default function ButtonCreation() {
 
     const json = response.data;
 
-    if (json.status == "success") {
+    if (json.status === "success") {
       setStatus("success");
       setUpdateGroups(!updateGroups);
-    } else if (json.status == "error") {
+      setShortDesc("");
+      setNameGroup("");
+    } else if (json.status === "error") {
       setStatus("error");
     }
 
@@ -118,15 +119,12 @@ export default function ButtonCreation() {
       >
         <MenuItem
           onClick={(event) => {
-            handleClose(event);
+            handleClose();
             setAnchorNG(event.currentTarget);
           }}
-          id="joinBtn"
+          id="createBtn"
         >
           Create Group
-        </MenuItem>
-        <MenuItem onClick={handleClose} id="createBtn">
-          Join Group
         </MenuItem>
       </Menu>
 
@@ -150,7 +148,7 @@ export default function ButtonCreation() {
             }}
             value={nameGroup}
             onChange={(e) => {
-              setnameGroup(e.target.value);
+              setNameGroup(e.target.value);
               setError("");
             }}
           />

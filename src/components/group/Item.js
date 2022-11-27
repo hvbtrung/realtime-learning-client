@@ -34,7 +34,7 @@ export default function Item({
         borderColor: "#cfcfcf",
       }}
     >
-      {isDel == true ? (
+      {isDel === true ? (
         <div style={{ paddingTop: "10px" }}>
           <input
             style={{ width: "20px", height: "20px" }}

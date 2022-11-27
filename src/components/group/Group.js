@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Member from "./Member";
 import axios from "axios";
 import { useDetailGrContext } from "../../hooks/useDetailGrContext";
@@ -31,17 +31,21 @@ export default function Group() {
     }
   };
   const getMembers = async ({ type }) => {
-    const response = await axios.get(`${url}/api/group/${id}/${type}/`, {
-      withCredentials: true,
-      validateStatus: () => true,
-    });
+    try {
+      const response = await axios.get(`${url}/api/group/${id}/${type}/`, {
+        withCredentials: true,
+        validateStatus: () => true,
+      });
 
-    if (type === "ROLE_OWNER") {
-      setOwners(response.data.members);
-    } else if (type === "ROLE_COOWNER") {
-      setCoOwners(response.data.members);
-    } else {
-      setMembers(response.data.members);
+      if (type === "ROLE_OWNER") {
+        setOwners(response.data.members);
+      } else if (type === "ROLE_COOWNER") {
+        setCoOwners(response.data.members);
+      } else {
+        setMembers(response.data.members);
+      }
+    } catch (e) {
+      console.error("error get member", e);
     }
   };
 
@@ -50,6 +54,7 @@ export default function Group() {
     getMembers({ type: "ROLE_MEMBER" });
     getMembers({ type: "ROLE_OWNER" });
     setRoleMember();
+    // eslint-disable-next-line
   }, [callApi]);
 
   return (

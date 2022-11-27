@@ -1,22 +1,23 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import List from "@mui/material/List";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
+import TextField from "@mui/material/TextField";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export function AlertDialogSlide() {
+export default function FullScreenDialog({ status }) {
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
+  React.useEffect(() => {
     setOpen(true);
-  };
+  }, [status]);
 
   const handleClose = () => {
     setOpen(false);
@@ -24,27 +25,40 @@ export function AlertDialogSlide() {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Slide in alert dialog
-      </Button>
       <Dialog
+        fullScreen
         open={open}
-        TransitionComponent={Transition}
-        keepMounted
         onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
+        TransitionComponent={Transition}
       >
-        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleClose}>Agree</Button>
-        </DialogActions>
+        <AppBar sx={{ position: "relative" }}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <List
+          sx={{
+            mt: 10,
+            width: "40%",
+            ml: "50%",
+            transform: "translateX(-50%)",
+          }}
+        >
+          <TextField
+            id="outlined-password-input"
+            label="Group Invitation Link"
+            type="text"
+            autoComplete="current-password"
+            fullWidth
+          />
+        </List>
       </Dialog>
     </div>
   );

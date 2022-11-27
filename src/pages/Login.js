@@ -1,123 +1,125 @@
-import { useEffect, useState } from 'react'
-import { useLogin } from '../hooks/useLogin';
+import { useEffect, useState } from "react";
+import { useLogin } from "../hooks/useLogin";
 
-import axios from 'axios';
-import { useAuthContext } from '../hooks/useAuthContext';
-import { FaFacebookF, FaGoogle, FaGithub } from 'react-icons/fa';
+import axios from "axios";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { FaFacebookF, FaGoogle, FaGithub } from "react-icons/fa";
 
 function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const { login, isLoading, error } = useLogin();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login, isLoading, error } = useLogin();
 
-    const { dispatch } = useAuthContext();
-    const url = process.env.REACT_APP_API_URL;
+  const { dispatch } = useAuthContext();
+  const url = process.env.REACT_APP_API_URL;
 
-    useEffect(() => {
-        const getUser = async () => {
-
-            const response = await axios.get(`${url}/api/users/social/login/success`, {
-                withCredentials: true,
-                validateStatus: () => true
-            });
-            const json = response.data;
-
-            if (json.status === 'success') {
-                localStorage.setItem('user', JSON.stringify(json.data.user));
-
-                dispatch({ type: 'LOGIN', payload: json.data.user });
-            }
+  useEffect(() => {
+    const getUser = async () => {
+      const response = await axios.get(
+        `${url}/api/users/social/login/success`,
+        {
+          withCredentials: true,
+          validateStatus: () => true,
         }
-        getUser();
-    }, [url, dispatch]);
+      );
+      const json = response.data;
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+      if (json.status === "success") {
+        localStorage.setItem("user", JSON.stringify(json.data.user));
 
-        await login(email, password);
-    }
+        dispatch({ type: "LOGIN", payload: json.data.user });
+      }
+    };
+    getUser();
+  }, [url, dispatch]);
 
-    const handleFacebookClick = () => {
-        // FacebookStrategy require https
-        // Implement later
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const handleGithubClick = () => {
-        window.open(`${url}/api/users/github`, '_self')
-    }
+    await login(email, password);
+  };
 
-    const handleGoogleClick = () => {
-        window.open(`${url}/api/users/google`, '_self');
-    }
+  const handleFacebookClick = () => {
+    // FacebookStrategy require https
+    // Implement later
+  };
 
-    return (
-        <div className='container'>
-            <div className='row'>
-                <h2 className='login-banner'>Login with Social Media or Manually</h2>
-                <div className='vl'>
-                    <span className='vl-innertext'>or</span>
-                </div>
+  const handleGithubClick = () => {
+    window.open(`${url}/api/users/github`, "_self");
+  };
 
-                <div className='col social-login'>
-                    <button className='fb btn' onClick={handleFacebookClick}>
-                        <FaFacebookF /> Login with Facebook
-                    </button>
-                    <button className='github btn' onClick={handleGithubClick}>
-                        <FaGithub /> Login with Github
-                    </button>
-                    <button className='google btn' onClick={handleGoogleClick}>
-                        <FaGoogle /> Login with Google+
-                    </button>
-                </div>
+  const handleGoogleClick = () => {
+    window.open(`${url}/api/users/google`, "_self");
+  };
 
-                <div className='col'>
-                    <form className='login' onSubmit={handleSubmit}>
-                        <h3>Log in</h3>
-
-                        <label>Email:</label>
-                        <input
-                            type='email'
-                            onChange={e => setEmail(e.target.value)}
-                            value={email}
-                        />
-
-                        <label>Password:</label>
-                        <input
-                            type='password'
-                            onChange={e => setPassword(e.target.value)}
-                            value={password}
-                        />
-
-                        <button disabled={isLoading}>Log in</button>
-                        {error && <div className='error'>{error}</div>}
-                    </form>
-                </div>
-            </div>
+  return (
+    <div className="container">
+      <div className="row">
+        <h2 className="login-banner">Login with Social Media or Manually</h2>
+        <div className="vl">
+          <span className="vl-innertext">or</span>
         </div>
-    );
+
+        <div className="col social-login">
+          <button className="fb btn" onClick={handleFacebookClick}>
+            <FaFacebookF /> Login with Facebook
+          </button>
+          <button className="github btn" onClick={handleGithubClick}>
+            <FaGithub /> Login with Github
+          </button>
+          <button className="google btn" onClick={handleGoogleClick}>
+            <FaGoogle /> Login with Google+
+          </button>
+        </div>
+
+        <div className="col">
+          <form className="login" onSubmit={handleSubmit}>
+            <h3>Log in</h3>
+
+            <label>Email:</label>
+            <input
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+            />
+
+            <label>Password:</label>
+            <input
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+            />
+
+            <button disabled={isLoading}>Log in</button>
+            {error && <div className="error">{error}</div>}
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Login;
 
 // return (
-    //     <form className='login' onSubmit={handleSubmit}>
-    //         <h3>Log in</h3>
+//     <form className='login' onSubmit={handleSubmit}>
+//         <h3>Log in</h3>
 
-    //         <label>Email:</label>
-    //         <input
-    //             type='email'
-    //             onChange={e => setEmail(e.target.value)}
-    //             value={email}
-    //         />
+//         <label>Email:</label>
+//         <input
+//             type='email'
+//             onChange={e => setEmail(e.target.value)}
+//             value={email}
+//         />
 
-    //         <label>Password:</label>
-    //         <input
-    //             type='password'
-    //             onChange={e => setPassword(e.target.value)}
-    //             value={password}
-    //         />
+//         <label>Password:</label>
+//         <input
+//             type='password'
+//             onChange={e => setPassword(e.target.value)}
+//             value={password}
+//         />
 
-    //         <button disabled={isLoading}>Log in</button>
-    //         {error && <div className='error'>{error}</div>}
-    //     </form>
-    // );
+//         <button disabled={isLoading}>Log in</button>
+//         {error && <div className='error'>{error}</div>}
+//     </form>
+// );
