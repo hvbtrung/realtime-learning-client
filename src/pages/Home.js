@@ -1,33 +1,38 @@
-import axios from "axios";
-import { useState } from "react";
+// import axios from "axios";
+// import { useState } from "react";
+import { useContext } from "react";
+import GroupCard from "../components/customize/GroupCard";
+import * as React from "react";
+import Grid from "@mui/material/Grid";
+import { GroupContext } from "../context/GroupContext";
 
 const Home = () => {
-    const [users, setUsers] = useState();
+  const { groups } = useContext(GroupContext);
 
-    const handleClick = async () => {
-        const url = process.env.REACT_APP_API_URL;
-        const response = await axios.get(`${url}/api/users`, {
-            withCredentials: true,
-            validateStatus: () => true
-        });
-        const json = response.data;
-
-        setUsers(json.data.users);
-    }
-
-    return (
-        <div className="home">
-            <h2>Home Page</h2>
-            <button onClick={handleClick}>Get Users</button>
-            {users && users.map((user, index) => (
-                <div key={index}>
-                    <h2>{user.email}</h2>
-                    <span>{user.name}</span>
-                    <h3>{user.role}</h3>
-                </div>
-            ))}
-        </div>
-    );
-}
+  return (
+    <React.Fragment>
+      {groups.length === 0 ? (
+        <h3>You don't join any group</h3>
+      ) : (
+        <Grid container spacing={2} columns={{ xs: 8, sm: 4, md: 12 }}>
+          {groups.map((elm) => {
+            return (
+              <Grid item xs={3} key={elm.groupId._id}>
+                <GroupCard
+                  id={elm.groupId._id}
+                  name={elm.groupId.name}
+                  owner={elm.userId.name}
+                  shortDesc={elm.groupId.shortDesc}
+                  role={elm.role}
+                  link={elm.groupId._id}
+                />
+              </Grid>
+            );
+          })}
+        </Grid>
+      )}
+    </React.Fragment>
+  );
+};
 
 export default Home;
