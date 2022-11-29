@@ -46,7 +46,7 @@ export default function GroupCard({ name, id, shortDesc, role, link }) {
     const url = process.env.REACT_APP_API_URL;
 
     const response = await axios.post(
-      `${url}/api/group/invite`,
+      `${url}/api/groups/invite`,
       {
         data: {
           inviteeEmail: email,
