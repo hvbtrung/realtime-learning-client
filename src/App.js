@@ -9,6 +9,8 @@ import Group from "./components/group/Group.js";
 import { GroupContextProvider } from "../src/context/GroupContext";
 import { DetailGroupCtxProvider } from "./context/DetailGroupContext";
 import { JoinGroup } from "./pages/JoinGroup";
+import Profile from './pages/profile/Profile';
+
 function App() {
   const { user } = useAuthContext();
 
@@ -39,6 +41,7 @@ function App() {
               }
             />
             <Route path="/group/join" element={<JoinGroup />} />
+            <Route path='/profile' element={user ? <Profile /> : <Navigate to="/login" />} />
             <Route
               path="/login"
               element={!user ? <Login /> : <Navigate to="/" />}
