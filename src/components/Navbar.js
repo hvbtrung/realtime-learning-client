@@ -19,7 +19,7 @@ function Navbar() {
                 <nav>
                     {user && (
                         <div>
-                            <span>{user.email}</span>
+                            <Link to="/profile"><span>{user.email}</span></Link>
                             <button onClick={handleLogoutClick}>Log out</button>
                         </div>
                     )}
