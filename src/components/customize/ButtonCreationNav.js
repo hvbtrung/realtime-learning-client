@@ -14,7 +14,7 @@ import CustomizedSnackbars from "../notification/snackbars";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
 export default function ButtonCreation() {
-  const { user, updateGroups, setUpdateGroups } = useAuthContext();
+  const { isReload, setIsReload } = useAuthContext();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorNG, setAnchorNG] = React.useState(null);
   const [nameGroup, setNameGroup] = React.useState("");
@@ -22,6 +22,7 @@ export default function ButtonCreation() {
   const [error, setError] = React.useState("");
   const [status, setStatus] = React.useState("");
   const [noti, setNoti] = React.useState(false);
+  const [message, setMessage] = React.useState("");
   const open = Boolean(anchorEl);
   const openNG = Boolean(anchorNG);
 
@@ -50,25 +51,32 @@ export default function ButtonCreation() {
   const submit = async () => {
     const url = process.env.REACT_APP_API_URL;
 
-    const response = await axios.post(`${url}/api/group`, {
-      data: {
-        nameGroup: nameGroup.trim(),
-        shortDesc: shortDesc.trim(),
-        userId: user._id,
+    const response = await axios.post(
+      `${url}/api/groups`,
+      {
+        data: {
+          nameGroup: nameGroup.trim(),
+          shortDesc: shortDesc.trim(),
+        },
       },
-      withCredentials: true,
-      validateStatus: () => true,
-    });
+      {
+        withCredentials: true,
+        validateStatus: () => true,
+      }
+    );
 
     const json = response.data;
 
     if (json.status === "success") {
       setStatus("success");
-      setUpdateGroups(!updateGroups);
+      setMessage(json.message);
+      setIsReload(!isReload);
       setShortDesc("");
       setNameGroup("");
     } else if (json.status === "error") {
       setStatus("error");
+      setMessage(json.message);
+      setIsReload(!isReload);
     }
 
     setNoti(!noti);
@@ -84,11 +92,7 @@ export default function ButtonCreation() {
         />
       )}
       {status === "error" && (
-        <CustomizedSnackbars
-          type="error"
-          status={noti}
-          message="Creating a group failure, please try again!"
-        />
+        <CustomizedSnackbars type="error" status={noti} message={message} />
       )}
 
       <Fab

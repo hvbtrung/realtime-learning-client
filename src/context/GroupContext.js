@@ -5,13 +5,13 @@ import axios from "axios";
 export const GroupContext = createContext({});
 
 export const GroupContextProvider = ({ children }) => {
-  const { user, updateGroups } = useAuthContext();
+  const { isReload } = useAuthContext();
   const [groups, setGroups] = useState([]);
   const [update, setUpdate] = useState(false);
   const url = process.env.REACT_APP_API_URL;
 
-  const getGroupsByUserId = async (userId) => {
-    const res = await axios.get(`${url}/api/group/${userId}/all`, {
+  const getGroupsByUserId = async () => {
+    const res = await axios.get(`${url}/api/groups`, {
       withCredentials: true,
       validateStatus: () => true,
     });
@@ -20,8 +20,8 @@ export const GroupContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    getGroupsByUserId(user._id);
-  }, [updateGroups]);
+    getGroupsByUserId();
+  }, [isReload]);
 
   return (
     <GroupContext.Provider value={{ groups, setGroups, update, setUpdate }}>

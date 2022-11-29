@@ -45,14 +45,19 @@ export default function GroupCard({ name, id, shortDesc, role, link }) {
   const sendMail = async () => {
     const url = process.env.REACT_APP_API_URL;
 
-    const response = await axios.post(`${url}/api/group/invite`, {
-      data: {
-        inviteeEmail: email,
-        link: link,
+    const response = await axios.post(
+      `${url}/api/group/invite`,
+      {
+        data: {
+          inviteeEmail: email,
+          link: link,
+        },
       },
-      withCredentials: true,
-      validateStatus: () => true,
-    });
+      {
+        withCredentials: true,
+        validateStatus: () => true,
+      }
+    );
 
     if (response.data.status === "success") {
       setStatus("success");

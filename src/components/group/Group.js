@@ -8,7 +8,7 @@ export default function Group() {
   const [coOwners, setCoOwners] = useState([]);
   const [members, setMembers] = useState([]);
   const [role, setRole] = useState("");
-  const { callApi } = useDetailGrContext();
+  const { isReloadMember } = useDetailGrContext();
 
   const url = process.env.REACT_APP_API_URL;
 
@@ -32,10 +32,13 @@ export default function Group() {
   };
   const getMembers = async ({ type }) => {
     try {
-      const response = await axios.get(`${url}/api/group/${id}/${type}/`, {
-        withCredentials: true,
-        validateStatus: () => true,
-      });
+      const response = await axios.get(
+        `${url}/api/group?groupId=${id}&type=${type}`,
+        {
+          withCredentials: true,
+          validateStatus: () => true,
+        }
+      );
 
       if (type === "ROLE_OWNER") {
         setOwners(response.data.members);
@@ -55,7 +58,7 @@ export default function Group() {
     getMembers({ type: "ROLE_OWNER" });
     setRoleMember();
     // eslint-disable-next-line
-  }, [callApi]);
+  }, [isReloadMember]);
 
   return (
     <div className="group-detail-container" style={{ minHeight: "110vh" }}>

@@ -27,16 +27,19 @@ export const JoinGroup = () => {
 
   const joinGroup = async () => {
     try {
-      const response = await axios.post(`${url}/api/group/join`, {
-        withCredentials: true,
-        validateStatus: () => true,
-        data: {
-          userId: user._id,
-          groupId: groupId,
-          role: "ROLE_MEMBER",
+      const response = await axios.post(
+        `${url}/api/group/join`,
+        {
+          data: {
+            groupId: groupId,
+            role: "ROLE_MEMBER",
+          },
         },
-      });
-      console.log(response.data);
+        {
+          withCredentials: true,
+          validateStatus: () => true,
+        }
+      );
 
       if (response.data.status === "error") {
         setStatus("error");

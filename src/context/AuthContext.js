@@ -18,8 +18,7 @@ export const AuthContextProvider = ({ children }) => {
     user: null,
   });
 
-  const [roleInGroup, setRoleInGroup] = useState("ROLE_MEMBER");
-  const [updateGroups, setUpdateGroups] = useState(false);
+  const [isReload, setIsReload] = useState(false);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -32,9 +31,7 @@ export const AuthContextProvider = ({ children }) => {
   // console.log("AuthContext state: ", state);
 
   return (
-    <AuthContext.Provider
-      value={{ ...state, dispatch, updateGroups, setUpdateGroups }}
-    >
+    <AuthContext.Provider value={{ ...state, dispatch, isReload, setIsReload }}>
       {children}
     </AuthContext.Provider>
   );

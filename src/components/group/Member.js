@@ -38,7 +38,7 @@ export default function Member({ members, role, itsRole }) {
   const [isCheck, setIsCheck] = React.useState([]);
   const [isDel, setIsDel] = React.useState(false);
   const [isOpenDelDialog, setIsOpenDelDialog] = React.useState(false);
-  const { callApi, setCallApi } = useDetailGrContext();
+  const { isReloadMember, setIsReloadMember } = useDetailGrContext();
   const [status, setStatus] = React.useState(false);
   const [noti, setNoti] = React.useState(false);
   const [message, setMessage] = React.useState("");
@@ -76,19 +76,23 @@ export default function Member({ members, role, itsRole }) {
       role = "ROLE_MEMBER";
     }
 
-    const response = await axios.post(`${url}/api/group/assign`, {
-      data: {
-        ownerId: user._id,
-        email: email,
-        role: role,
-        groupId: groupId,
+    const response = await axios.post(
+      `${url}/api/group/`,
+      {
+        data: {
+          email: email,
+          role: role,
+          groupId: groupId,
+        },
       },
-      withCredentials: true,
-      validateStatus: () => true,
-    });
+      {
+        withCredentials: true,
+        validateStatus: () => true,
+      }
+    );
 
     if (response.data.status === "success") {
-      setCallApi(!callApi);
+      setIsReloadMember(!isReloadMember);
       setStatus("success");
       setMessage(response.data.message);
     } else {
@@ -102,31 +106,18 @@ export default function Member({ members, role, itsRole }) {
   };
 
   // function delete member
-  const detachMember = async () => {
+  const kickOutMember = async ({ userId, groupId }) => {
     const url = process.env.REACT_APP_API_URL;
 
-    const response = await axios.post(`${url}/api/group/del-member`, {
-      data: {
-        userIds: isCheck,
-        groupId: groupId,
-        ownerId: user._id,
-      },
-      withCredentials: true,
-      validateStatus: () => true,
-    });
+    const response = await axios.delete(
+      `${url}/api/group/${groupId}/${userId}`,
 
-    if (response.data.status === "success") {
-      setCallApi(!callApi);
-      setStatus("success");
-      setMessage(response.data.message);
-    } else {
-      setStatus("error");
-      setMessage(response.data.message);
-    }
-    handleCloseDelDialog();
-    setNoti(!noti);
-    setIsCheck([]);
-    showCheckboxDel();
+      {
+        withCredentials: true,
+        validateStatus: () => true,
+        data: "abc",
+      }
+    );
   };
 
   // show checkbox select all for deleting members
@@ -159,14 +150,33 @@ export default function Member({ members, role, itsRole }) {
     }
   };
 
-  const handleSubmitDeletion = () => {
+  const handleSubmitDeletion = async () => {
     if (isCheck.length === 0) {
       setStatus("error");
       setMessage("You don't select anyone");
       handleCloseDelDialog();
       return setNoti(!noti);
     }
-    detachMember();
+
+    try {
+      // isCheck.forEach((userId) => {});
+
+      for (let userId of isCheck) {
+        await kickOutMember({ userId, groupId });
+      }
+
+      handleCloseDelDialog();
+      setStatus("success");
+      setMessage("Delete member success");
+      setNoti(!noti);
+      setIsCheck([]);
+      showCheckboxDel();
+      setIsReloadMember(!isReloadMember);
+    } catch (e) {
+      setStatus("error");
+      setMessage("Delete member failure");
+      return console.error(e);
+    }
   };
 
   return (
