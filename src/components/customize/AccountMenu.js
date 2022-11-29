@@ -8,6 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { useLogout } from "../../hooks/useLogout";
+import { Link } from "react-router-dom";
 
 export default function AccountMenu({ photo }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -83,7 +84,7 @@ export default function AccountMenu({ photo }) {
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
-          Settings
+          <Link to="/profile" style={{ textDecoration: "none", color: "#000000DE" }}>Settings</Link>
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
