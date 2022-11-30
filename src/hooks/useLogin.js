@@ -15,7 +15,8 @@ export const useLogin = () => {
 
         const response = await axios.post(`${url}/api/users/login`, { email, password }, {
             withCredentials: true,
-            validateStatus: () => true
+            validateStatus: () => true,
+            credentials: 'include',
         });
         const json = response.data;
 
