@@ -40,7 +40,7 @@ function App() {
                 </DetailGroupCtxProvider>
               }
             />
-            <Route path="/group/join" element={<JoinGroup />} />
+            <Route path="/group/join" element={user ? <JoinGroup /> : <Navigate to="/login" />} />
             <Route path='/profile' element={user ? <Profile /> : <Navigate to="/login" />} />
             <Route
               path="/login"

@@ -11,8 +11,6 @@ export const useLogout = () => {
             validateStatus: () => true
         });
 
-        localStorage.removeItem('user');
-
         dispatch({ type: 'LOGOUT' });
     }
 
