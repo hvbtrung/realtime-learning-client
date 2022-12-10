@@ -5,11 +5,12 @@ import axios from "axios";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { FaFacebookF, FaGoogle, FaGithub } from "react-icons/fa";
 
-function Login() {
+function Login({ href }) {
+  console.log("href:", href);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login, isLoading, error } = useLogin();
-
   const { dispatch } = useAuthContext();
   const url = process.env.REACT_APP_API_URL;
 

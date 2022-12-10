@@ -13,7 +13,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Item from "./Item";
 import axios from "axios";
 import Slide from "@mui/material/Slide";
-import { useAuthContext } from "../../hooks/useAuthContext";
 import CustomizedSnackbars from "../notification/snackbars";
 import { useDetailGrContext } from "../../hooks/useDetailGrContext";
 
@@ -30,7 +29,6 @@ export const validateEmail = (email) => {
 };
 
 export default function Member({ members, role, itsRole }) {
-  const { user } = useAuthContext();
   const [email, setEmail] = React.useState("");
   const [isOpenAddDialog, setIsOpenAddDialog] = React.useState(false);
   const [error, setError] = React.useState("");

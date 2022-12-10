@@ -1,4 +1,3 @@
-import { useAuthContext } from "../hooks/useAuthContext";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -15,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 export const JoinGroup = () => {
   let navigate = useNavigate();
-  const { user } = useAuthContext();
+
   const [group, setGroup] = useState({});
   const [status, setStatus] = useState(false);
   const [noti, setNoti] = useState(false);
@@ -91,76 +90,74 @@ export const JoinGroup = () => {
         <CustomizedSnackbars type="error" status={noti} message={message} />
       )}
 
-      {status === "notfound" || (
-        <Grid item xs={3}>
-          <Box
+      <Grid item xs={3}>
+        <Box
+          sx={{
+            width: 700,
+            height: 450,
+            mt: 6,
+            p: 0,
+          }}
+        >
+          <div style={{ textAlign: "center" }}>
+            <h3 style={{ color: "rgba(0,0,0,.87)" }}>
+              Do you want to join this group ?
+            </h3>
+          </div>
+          <Card
             sx={{
-              width: 700,
-              height: 450,
-              mt: 6,
-              p: 0,
+              maxWidth: 315,
+              ml: "50%",
+            }}
+            style={{
+              transform: `translate(-50%)`,
             }}
           >
-            <div style={{ textAlign: "center" }}>
-              <h3 style={{ color: "rgba(0,0,0,.87)" }}>
-                Do you want to join this group ?
-              </h3>
-            </div>
-            <Card
-              sx={{
-                maxWidth: 315,
-                ml: "50%",
-              }}
-              style={{
-                transform: `translate(-50%)`,
-              }}
-            >
-              <CardMedia
-                component="img"
-                alt="green iguana"
-                height="140"
-                image="https://gstatic.com/classroom/themes/img_read.jpg"
-                sx={{ position: "relative" }}
-              />
-              <CardContent>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="div"
-                  sx={{
-                    color: "white",
-                    position: "absolute",
-                    transform: "translateY(-400%)",
-                  }}
-                >
-                  {group.name}
-                </Typography>
+            <CardMedia
+              component="img"
+              alt="green iguana"
+              height="140"
+              image="https://gstatic.com/classroom/themes/img_read.jpg"
+              sx={{ position: "relative" }}
+            />
+            <CardContent>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="div"
+                sx={{
+                  color: "white",
+                  position: "absolute",
+                  transform: "translateY(-400%)",
+                }}
+              >
+                {group.name}
+              </Typography>
 
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  align="left"
-                  sx={{
-                    color: "black",
-                  }}
-                >
-                  {group.shortDesc}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  sx={{ ml: 1 }}
-                  variant="outlined"
-                  size="medium"
-                  onClick={joinGroup}
-                >
-                  JOIN Group
-                </Button>
-              </CardActions>
-            </Card>
-          </Box>
-        </Grid>
-      )}
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                align="left"
+                sx={{
+                  color: "black",
+                }}
+              >
+                {group.shortDesc}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button
+                sx={{ ml: 1 }}
+                variant="outlined"
+                size="medium"
+                onClick={joinGroup}
+              >
+                JOIN Group
+              </Button>
+            </CardActions>
+          </Card>
+        </Box>
+      </Grid>
     </Grid>
   );
 };

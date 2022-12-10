@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -119,11 +119,18 @@ export default function GroupCard({ name, id, shortDesc, role, link }) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={handleClickOpen}>
+        <Button
+          size="small"
+          sx={{ color: "#3a86ff" }}
+          onClick={handleClickOpen}
+        >
           Share
         </Button>
         <Button size="small">
-          <Link href={concreteURL} underline="none">
+          <Link
+            to={concreteURL}
+            style={{ textDecoration: "none", color: "#3a86ff" }}
+          >
             MORE INFO
           </Link>
         </Button>

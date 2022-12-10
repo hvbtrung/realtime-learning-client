@@ -21,6 +21,7 @@ export const GroupContextProvider = ({ children }) => {
 
   useEffect(() => {
     getGroupsByUserId();
+    // eslint-disable-next-line
   }, [isReload]);
 
   return (
