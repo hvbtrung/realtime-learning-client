@@ -43,8 +43,6 @@ export const useInfoChange = () => {
                 setIsLoading(false);
             }
             if (json.status === 'success') {
-                localStorage.setItem('user', JSON.stringify(json.data.user));
-
                 dispatch({ type: 'LOGIN', payload: json.data.user });
                 setSuccess(true);
                 setIsLoading(false);
