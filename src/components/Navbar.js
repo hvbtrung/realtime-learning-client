@@ -51,15 +51,16 @@ function Navbar() {
               </Box>
             </Box>
           )}
-          {!user && (
-            <div>
-              <Link to="/login" style={{ marginRight: "20px" }}>
-                Login
-              </Link>
-              <Link to="/signup">Signup</Link>
-            </div>
-          )}
         </Box>
+
+        {!user && (
+          <div>
+            <Link to="/login" style={{ marginRight: "20px" }}>
+              Login
+            </Link>
+            <Link to="/signup">Signup</Link>
+          </div>
+        )}
       </Box>
     </header>
   );
