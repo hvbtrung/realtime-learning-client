@@ -36,7 +36,7 @@ export function BodyPres() {
       let presentations = res.data.presentations;
       for (let presentation of presentations) {
         presentation.createdAt = customizeDate(presentation.createdAt);
-        presentation.updatedAt = customizeDate(presentation.createdAt);
+        presentation.updatedAt = customizeDate(presentation.updatedAt);
       }
       setPresentation(presentations);
     } catch (e) {
