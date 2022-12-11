@@ -9,6 +9,7 @@ import Group from "./components/group/Group.js";
 import { GroupContextProvider } from "../src/context/GroupContext";
 import { DetailGroupCtxProvider } from "./context/DetailGroupContext";
 import { JoinGroup } from "./pages/JoinGroup";
+import { Presentation } from "./components/presentation/Presentation";
 import Profile from "./pages/profile/Profile";
 
 function App() {
@@ -31,6 +32,22 @@ function App() {
                   <Navigate to="/login" />
                 )
               }
+            />
+            <Route
+              path="/groups"
+              element={
+                user ? (
+                  <GroupContextProvider>
+                    <Home />
+                  </GroupContextProvider>
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/presentations"
+              element={user ? <Presentation /> : <Navigate to="/login" />}
             />
             <Route
               path="/group/detail-information/:id/"
