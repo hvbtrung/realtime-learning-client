@@ -14,6 +14,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Typography,
 } from "@mui/material";
 import { EditButton } from "./EditPresentation";
 
@@ -57,50 +58,56 @@ export function BodyPres() {
           message={messageNotification}
         />
       )}
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>
-                Name Presentation
-              </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} align="right">
-                Owner
-              </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} align="right">
-                Modified
-              </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} align="right">
-                Created
-              </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} align="right">
-                Option
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {presentations.map((row) => (
-              <TableRow
-                key={row._id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {row.title}
+      {presentations.length !== 0 ? (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: "bold" }}>
+                  Name Presentation
                 </TableCell>
-                <TableCell align="right">{row.owner.name}</TableCell>
-                <TableCell align="right">{row.updatedAt}</TableCell>
-                <TableCell align="right">{row.createdAt}</TableCell>
-                <TableCell align="right">
-                  <EditButton
-                    namePresentation={row.title}
-                    idPresentation={row._id}
-                  />
+                <TableCell sx={{ fontWeight: "bold" }} align="right">
+                  Owner
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }} align="right">
+                  Modified
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }} align="right">
+                  Created
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }} align="right">
+                  Option
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {presentations.map((row) => (
+                <TableRow
+                  key={row._id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {row.title}
+                  </TableCell>
+                  <TableCell align="right">{row.owner.name}</TableCell>
+                  <TableCell align="right">{row.updatedAt}</TableCell>
+                  <TableCell align="right">{row.createdAt}</TableCell>
+                  <TableCell align="right">
+                    <EditButton
+                      namePresentation={row.title}
+                      idPresentation={row._id}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <Typography variant="h6" gutterBottom>
+          You don't create any presentation
+        </Typography>
+      )}
     </div>
   );
 }
