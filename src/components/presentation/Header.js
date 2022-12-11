@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {
   Stack,
@@ -26,14 +26,15 @@ export function HeaderPres() {
     messageNotification,
   } = useNotificationContext();
 
-  const [creationPresDialog, setCreationPresDialog] = useState(null);
+  const [isOpenCreationPresDialog, setIsOpenCreationPresDialog] =
+    useState(null);
   const [namePresentation, setNamePresentation] = useState("");
   const [error, setError] = useState("");
 
-  const isCreatePresDialog = Boolean(creationPresDialog);
+  const openCreatePresDialog = Boolean(isOpenCreationPresDialog);
 
   const closeCreationPresDialog = () => {
-    setCreationPresDialog(null);
+    setIsOpenCreationPresDialog(null);
     setError("");
   };
 
@@ -86,14 +87,14 @@ export function HeaderPres() {
         <Button
           variant="outlined"
           onClick={(event) => {
-            setCreationPresDialog(event.currentTarget);
+            setIsOpenCreationPresDialog(event.currentTarget);
           }}
         >
           New Presentation
         </Button>
       </Stack>
 
-      <Dialog open={isCreatePresDialog}>
+      <Dialog open={openCreatePresDialog}>
         <DialogTitle sx={{ pb: 1 }}>Create New Presentation</DialogTitle>
         <Box sx={{ pl: 5, pr: 5, pt: -2 }}>
           <div

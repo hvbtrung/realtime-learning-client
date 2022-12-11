@@ -2,6 +2,8 @@ import * as React from "react";
 import { useState } from "react";
 import { Tooltip, IconButton, Menu, MenuItem } from "@mui/material";
 import RenameDialog from "./RenamePresentation";
+import DeleteDialog from "./DeletePresentation";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ShareIcon from "@mui/icons-material/Share";
@@ -11,9 +13,11 @@ import EditIcon from "@mui/icons-material/Edit";
 export function EditButton({ namePresentation, idPresentation }) {
   const [isOpenOptionDialog, setIsOpenOptionDialog] = useState(null);
   const [isOpenRenameDialog, setIsOpenRenameDialog] = useState(null);
+  const [isOpenDelDialog, setIsOpenDelDialog] = useState(false);
 
-  const openRenamDialog = Boolean(isOpenRenameDialog);
-  const open = Boolean(isOpenOptionDialog);
+  const openRenamDialogBool = Boolean(isOpenRenameDialog);
+  const openMenuBool = Boolean(isOpenOptionDialog);
+  const openDelDialogBool = Boolean(isOpenDelDialog);
 
   const openOptionDialog = (event) => {
     setIsOpenOptionDialog(event.currentTarget);
@@ -22,27 +26,42 @@ export function EditButton({ namePresentation, idPresentation }) {
     setIsOpenOptionDialog(null);
   };
 
-  const closeRenameDialog = () => {
+  const closeRenameDialogFunc = () => {
     setIsOpenRenameDialog(null);
   };
-  const openRenameDialog = () => {
+  const openRenameDialogFunc = () => {
     setIsOpenRenameDialog(true);
     closeOptionDialog();
+  };
+
+  const openDelDialogFunc = () => {
+    setIsOpenDelDialog(true);
+    closeOptionDialog();
+  };
+
+  const closeDelDialogFunc = () => {
+    setIsOpenDelDialog(null);
   };
 
   return (
     <div>
       <RenameDialog
-        openRenamDialog={openRenamDialog}
-        closeRenameDialog={closeRenameDialog}
+        openRenamDialog={openRenamDialogBool}
+        closeRenameDialogFunc={closeRenameDialogFunc}
         prevNamePresentation={namePresentation}
+        idPresentation={idPresentation}
+      />
+      <DeleteDialog
+        openDelDialog={openDelDialogBool}
+        closeDelDialogFunc={closeDelDialogFunc}
+        namePresentation={namePresentation}
         idPresentation={idPresentation}
       />
       <Menu
         id="demo-positioned-menu"
         aria-labelledby="demo-positioned-button"
         anchorEl={isOpenOptionDialog}
-        open={open}
+        open={openMenuBool}
         onClose={closeOptionDialog}
         anchorOrigin={{
           vertical: "top",
@@ -53,7 +72,7 @@ export function EditButton({ namePresentation, idPresentation }) {
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={openRenameDialog}>
+        <MenuItem onClick={openRenameDialogFunc}>
           <EditIcon sx={{ mr: "10px" }} />
           Rename
         </MenuItem>
@@ -63,7 +82,7 @@ export function EditButton({ namePresentation, idPresentation }) {
         <MenuItem onClick={closeOptionDialog}>
           <ShareIcon sx={{ mr: "10px" }} /> Share
         </MenuItem>
-        <MenuItem onClick={closeOptionDialog}>
+        <MenuItem onClick={openDelDialogFunc}>
           <DeleteIcon sx={{ mr: "10px" }} /> Delete
         </MenuItem>
       </Menu>

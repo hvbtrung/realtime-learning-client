@@ -15,7 +15,7 @@ import { useNotificationContext } from "../../hooks/useNotificationContext";
 
 export default function RenameDialog({
   openRenamDialog,
-  closeRenameDialog,
+  closeRenameDialogFunc,
   prevNamePresentation,
   idPresentation,
 }) {
@@ -65,7 +65,7 @@ export default function RenameDialog({
     }
 
     submitUpdatePresentation();
-    closeRenameDialog();
+    closeRenameDialogFunc();
   };
   return (
     <Dialog open={openRenamDialog}>
@@ -95,7 +95,7 @@ export default function RenameDialog({
         />
       </Box>
       <DialogActions>
-        <Button sx={{ color: "#6c757d" }} onClick={closeRenameDialog}>
+        <Button sx={{ color: "#6c757d" }} onClick={closeRenameDialogFunc}>
           Cancel
         </Button>
         <Button onClick={isValidNamePresentation}>Rename</Button>

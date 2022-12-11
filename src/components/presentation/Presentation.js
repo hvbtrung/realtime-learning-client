@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { HeaderPres } from "./Header";
 import { BodyPres } from "./Body";
 import { NotificationProvider } from "../../context/NotificationContext";
-import { useNotificationContext } from "../../hooks/useNotificationContext";
-import CustomizedSnackbars from "../notification/snackbars";
 
 export function Presentation() {
-  const { typeNotification, messageNotification, isAppearNotification } =
-    useNotificationContext();
-
   return (
     <NotificationProvider>
       <div
