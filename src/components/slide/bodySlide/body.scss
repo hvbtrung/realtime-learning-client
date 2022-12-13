@@ -1,0 +1,22 @@
+.bodySlideWrapper {
+    display: flex;
+    height: 520px;
+
+    .leftBodyContainer{
+        flex: 1;
+        background-color: #fff;
+        overflow-y: scroll;
+    }
+    .centerBodyContainer{
+        flex: 3;
+        background-color: #ccc;
+        padding: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .rightBodyContainer{
+        flex: 1;
+        background-color: #fff;
+    }
+}

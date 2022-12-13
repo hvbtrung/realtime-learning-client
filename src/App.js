@@ -51,7 +51,7 @@ function App() {
               element={user ? <Presentation /> : <Navigate to="/login" />}
             />
             <Route
-              path="/slides"
+              path="/presentations/:presentationId/slides"
               element={user ? <Slides /> : <Navigate to="/login" />}
             />
             <Route

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import customizeDate from "../customize/CustomizeDate";
 import { useAuthContext } from "../../hooks/useAuthContext";
@@ -20,6 +20,8 @@ import {
 import { EditButton } from "./EditPresentation";
 
 export function BodyPres() {
+  const navigate = useNavigate();
+
   const { isAppearNotification, typeNotification, messageNotification } =
     useNotificationContext();
 
@@ -49,6 +51,10 @@ export function BodyPres() {
   useEffect(() => {
     getAllPresentations();
   }, [isReload]);
+
+  const handleClick = (presentation) => {
+    navigate(`/presentations/${presentation._id}/slides`, { state: presentation });
+  }
 
   return (
     <div>
@@ -88,15 +94,9 @@ export function BodyPres() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    <Link
-                      to="/slides"
-                      style={{
-                        textDecoration: "none",
-                        color: "rgba(0, 0, 0, 0.01);",
-                      }}
-                    >
+                    <span onClick={() => handleClick(row)} style={{ cursor: "pointer" }}>
                       {row.title}
-                    </Link>
+                    </span>
                   </TableCell>
                   <TableCell align="right">{row.owner.name}</TableCell>
                   <TableCell align="right">{row.updatedAt}</TableCell>

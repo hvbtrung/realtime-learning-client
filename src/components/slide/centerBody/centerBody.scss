@@ -1,0 +1,26 @@
+.centerBodyWrapper {
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    margin: 10px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .goTo {
+
+    }
+
+    .centerBody {
+        align-self: flex-start;
+        margin: 15px 10px;
+        font-weight: 400;
+        font-size: 30px;
+    }
+
+    .resultChart {
+        margin: 20px 10px 60px 10px;
+        width: 80%;
+        height: 80%;
+    }
+}
