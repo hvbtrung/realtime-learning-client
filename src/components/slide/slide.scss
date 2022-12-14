@@ -1,0 +1,28 @@
+.slideContainer{
+    .slides {
+        display: flex;
+        flex-direction: column;
+        .presentSlideContainer {
+            display: flex;
+            margin-left: -20px;
+            width: 90vw;
+            height: 75vh;
+
+            .icon{
+                font-size: 50px;
+                color: #356dff;
+                cursor: pointer;
+            }
+
+            .icon.unactive {
+                color: #ccc;
+                pointer-events: none;
+            }
+        }
+        .stopBtn {
+            align-self: center;
+            margin-top: 10px;
+            width: 200px;
+        }
+    }
+}

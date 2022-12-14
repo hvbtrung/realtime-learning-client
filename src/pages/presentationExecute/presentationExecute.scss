@@ -1,0 +1,53 @@
+.preExecuteContainer {
+    margin: 0 auto;
+    background-color: #fff;
+    width: 80%;
+    .preExecuteWrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .title {
+            font-size: 40px;
+            opacity: 0.6;
+        }
+        .question {
+            font-size: 30px;
+            font-weight: 500;
+        }
+        .options {
+            list-style: none;
+            .option{
+                width: 500px;
+                height: 60px;
+                padding: 0 20px;
+                margin-bottom: 15px;
+                background-color: #fff;
+                line-height: 60px;
+                border: 2px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .option.active {
+                border: 3px solid #356dff;
+            }
+        }
+
+        .submitBtn {
+            background-color: #356dff;
+            color: #fff;
+            margin-bottom: 50px;
+            width: 200px;
+        }
+
+        .submitBtn.disable {
+            background-color: #ccc;
+            pointer-events: none;
+        }
+
+        .endPre {
+            font-size: 40px;
+            font-weight: 500;
+        }
+    }
+}

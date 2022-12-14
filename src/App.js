@@ -12,6 +12,7 @@ import { JoinGroup } from "./pages/JoinGroup";
 import { Presentation } from "./components/presentation/Presentation";
 import Slides from "./components/slide/Slides";
 import Profile from "./pages/profile/Profile";
+import PresentationExecute from "./pages/presentationExecute/PresentationExecute";
 
 function App() {
   const { user } = useAuthContext();
@@ -56,6 +57,11 @@ function App() {
             <Route
               path="/presentations/:presentationId/slides"
               element={user ? <Slides /> : <Navigate to="/login" />}
+            />
+
+            <Route
+              path="/presentations/:presentationId/execute"
+              element={<PresentationExecute />}
             />
 
             <Route

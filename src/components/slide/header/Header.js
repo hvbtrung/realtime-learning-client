@@ -17,7 +17,7 @@ const style = {
   p: 4,
 };
 
-export default function HeaderSlide({ presentation, slides, setSlides }) {
+export default function HeaderSlide({ presentation, slides, setSlides, setSlide, setPresent }) {
   const [showAddSlideModal, setShowAddSlideModal] = useState(false);
   const [question, setQuestion] = useState(null);
   const [options, setOptions] = useState([{ name: "", counter: 0 }]);
@@ -55,6 +55,7 @@ export default function HeaderSlide({ presentation, slides, setSlides }) {
     setSlides([...slides, res.data.data]);
     setQuestion("");
     setOptions([{ name: "", counter: 0 }]);
+    setSlide(res.data.data);
     setShowAddSlideModal(false);
   }
 
@@ -83,7 +84,11 @@ export default function HeaderSlide({ presentation, slides, setSlides }) {
           <Typography>{presentation.title}</Typography>
         </Box>
         <Box className="HeaderSlide__Right">
-          <Button sx={{ ml: 3 }} variant="outlined">
+          <Button
+            sx={{ ml: 3 }}
+            variant="outlined"
+            onClick={() => setPresent(true)}
+          >
             <PlayArrowIcon /> Present
           </Button>
         </Box>

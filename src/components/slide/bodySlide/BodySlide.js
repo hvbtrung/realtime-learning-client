@@ -2,17 +2,8 @@ import "./body.scss";
 import { LeftBodySlide } from "../leftBody/LeftBody";
 import RightBody from "../rightBody/RightBody";
 import { CenterBodySlide } from "../centerBody/CenterBody";
-import { useEffect, useState } from "react";
 
-const BodySlide = ({ presentation, slides, setSlides }) => {
-  const [slide, setSlide] = useState(slides[0]);
-
-  useEffect(() => {
-    if (slides.length === 1) {
-      setSlide(slides[0]);
-    }
-  }, [slides]);
-
+const BodySlide = ({ presentation, slides, setSlides, slide, setSlide }) => {
   return (
     slide ? (
       <div className="bodySlideWrapper" >
