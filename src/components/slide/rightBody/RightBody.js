@@ -21,6 +21,7 @@ const style = {
 
 const RightBody = ({ slide, setSlide, slides, setSlides }) => {
   const [showEditSlideModal, setShowEditSlideModal] = useState(false);
+  const [showDeleteSlideModal, setShowDeleteSlideModal] = useState(false);
   const [question, setQuestion] = useState(slide.question);
   const [options, setOptions] = useState(slide.options);
 
@@ -50,6 +51,7 @@ const RightBody = ({ slide, setSlide, slides, setSlides }) => {
     newSlides = newSlides.filter((newSlide) => newSlide._id !== slide._id);
     setSlides(newSlides);
     setSlide(newSlides[0]);
+    setShowDeleteSlideModal(false);
   }
 
   const handleSubmit = async (e) => {
@@ -66,9 +68,10 @@ const RightBody = ({ slide, setSlide, slides, setSlides }) => {
       validateStatus: () => true,
     });
 
+    const index = slides.indexOf(slide);
     let newSlides = [...slides];
-    newSlides = newSlides.filter((newSlide) => newSlide._id !== slide._id);
-    setSlides([...newSlides, res.data.data]);
+    newSlides[index] = res.data.data;
+    setSlides(newSlides);
     setSlide(res.data.data);
     setShowEditSlideModal(false);
   }
@@ -108,7 +111,7 @@ const RightBody = ({ slide, setSlide, slides, setSlides }) => {
           sx={{ ml: 1 }}
           variant="contained"
           color="error"
-          onClick={handleDeleteSlide}
+          onClick={() => setShowDeleteSlideModal(true)}
         >
           Delete Slide
         </Button>
@@ -171,6 +174,40 @@ const RightBody = ({ slide, setSlide, slides, setSlides }) => {
               <Button type="submit" variant="contained" centered>Save Slide</Button>
             </form>
           </Typography>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={showDeleteSlideModal}
+        onClose={() => setShowDeleteSlideModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Delete Slide
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Are you sure you want to delete slide?
+          </Typography>
+          <div className="modalButton">
+            <Button
+              variant="outlined"
+              sx={{ m: 1 }}
+              onClick={() => setShowDeleteSlideModal(false)}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              variant="outlined"
+              sx={{ m: 1 }}
+              color="error"
+              onClick={handleDeleteSlide}
+            >
+              Delete
+            </Button>
+          </div>
         </Box>
       </Modal>
     </div>

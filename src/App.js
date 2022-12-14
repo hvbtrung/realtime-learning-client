@@ -34,6 +34,7 @@ function App() {
                 )
               }
             />
+
             <Route
               path="/groups"
               element={
@@ -46,14 +47,17 @@ function App() {
                 )
               }
             />
+
             <Route
               path="/presentations"
               element={user ? <Presentation /> : <Navigate to="/login" />}
             />
+
             <Route
               path="/presentations/:presentationId/slides"
               element={user ? <Slides /> : <Navigate to="/login" />}
             />
+
             <Route
               path="/group/detail-information/:id/"
               element={
@@ -66,6 +70,7 @@ function App() {
                 )
               }
             />
+
             <Route path="/group/join" element={<JoinGroup />} />
 
             <Route

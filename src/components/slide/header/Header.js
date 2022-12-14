@@ -53,6 +53,8 @@ export default function HeaderSlide({ presentation, slides, setSlides }) {
     });
 
     setSlides([...slides, res.data.data]);
+    setQuestion("");
+    setOptions([{ name: "", counter: 0 }]);
     setShowAddSlideModal(false);
   }
 
