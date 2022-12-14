@@ -1,24 +1,14 @@
 import * as React from "react";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import Item from "./Item";
 import axios from "axios";
-import Slide from "@mui/material/Slide";
 import CustomizedSnackbars from "../notification/snackbars";
 import { useDetailGrContext } from "../../hooks/useDetailGrContext";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { DeleteDialog } from "./DelConfirmDialog";
+import { AddDialog } from "./AddDialog";
+import { OptionButton } from "./Utils";
 
 export const validateEmail = (email) => {
   return String(email)
@@ -26,6 +16,31 @@ export const validateEmail = (email) => {
     .match(
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
+};
+
+const styleAddRole = {
+  color: "rgb(194,100,1)",
+  borderBottom: 0.001,
+  borderColor: "rgb(194,100,1)",
+  pb: 2,
+  display: "flex",
+  alignItems: "center",
+  textAlign: "left",
+  justifyContent: "space-between",
+};
+
+const styleDelAllButton = {
+  marginBottom: "10px",
+  marginLeft: "15px",
+  color: "rgb(194,100,1)",
+  height: "25px",
+};
+
+const styleDelCheckBoxContainer = {
+  paddingTop: "10px",
+  paddingLeft: "16px",
+  paddingBottom: "0",
+  marginBottom: "-10px",
 };
 
 export default function Member({ members, role, itsRole }) {
@@ -46,7 +61,6 @@ export default function Member({ members, role, itsRole }) {
     "/group/detail-information/".length,
     pathname.length
   );
-  let openDelStyle = { backgroundColor: "#dddddd", borderRadius: "2px" };
 
   const handleOpenAddDialog = () => {
     setIsOpenAddDialog(true);
@@ -107,13 +121,12 @@ export default function Member({ members, role, itsRole }) {
   const kickOutMember = async ({ userId, groupId }) => {
     const url = process.env.REACT_APP_API_URL;
 
-    const response = await axios.delete(
+    await axios.delete(
       `${url}/api/group/${groupId}/${userId}`,
 
       {
         withCredentials: true,
         validateStatus: () => true,
-        data: "abc",
       }
     );
   };
@@ -157,12 +170,9 @@ export default function Member({ members, role, itsRole }) {
     }
 
     try {
-      // isCheck.forEach((userId) => {});
-
       for (let userId of isCheck) {
         await kickOutMember({ userId, groupId });
       }
-
       handleCloseDelDialog();
       setStatus("success");
       setMessage("Delete member success");
@@ -185,123 +195,41 @@ export default function Member({ members, role, itsRole }) {
       {status === "error" && (
         <CustomizedSnackbars type="error" status={noti} message={message} />
       )}
+
       <Box>
         {/* open/close pop-up assign new role or new member */}
-        <Box
-          sx={{
-            color: "rgb(194,100,1)",
-            borderBottom: 0.001,
-            borderColor: "rgb(194,100,1)",
-            pb: 2,
-            display: "flex",
-            alignItems: "center",
-            textAlign: "left",
-            justifyContent: "space-between",
-          }}
-        >
+        <Box sx={styleAddRole}>
           <Typography variant="h5">{role}</Typography>
 
-          {itsRole === "ROLE_OWNER" &&
-          (role === "Co-Owner" || role === "Member") ? (
-            <div>
-              {/* button delete */}
+          <OptionButton
+            itsRole={itsRole}
+            role={role}
+            showCheckboxDel={showCheckboxDel}
+            members={members}
+            isDel={isDel}
+            handleOpenAddDialog={handleOpenAddDialog}
+          />
+          <AddDialog
+            isOpenAddDialog={isOpenAddDialog}
+            handleCloseAddDialog={handleCloseAddDialog}
+            handleSubmitAddition={handleSubmitAddition}
+            role={role}
+            setEmail={setEmail}
+            setError={setError}
+            error={error}
+            email={email}
+          />
 
-              {members.length > 0 ? (
-                <MoreVertIcon
-                  onClick={showCheckboxDel}
-                  style={isDel ? openDelStyle : {}}
-                  sx={{
-                    mr: 2,
-                    borderColor: "rgb(194,100,1)",
-                    "&:hover": {
-                      backgroundColor: "#cfcfcf",
-                      opacity: [0.9, 0.8, 0.7],
-                    },
-                  }}
-                  className="moreverticon"
-                />
-              ) : (
-                ""
-              )}
-              {/* button add  */}
-              <GroupAddIcon
-                sx={{
-                  "&:hover": {
-                    opacity: [0.9, 0.8, 0.7],
-                  },
-                }}
-                onClick={handleOpenAddDialog}
-              />
-            </div>
-          ) : (
-            ""
-          )}
-
-          {/* adding dialog  */}
-          <Dialog open={isOpenAddDialog} onClose={handleCloseAddDialog}>
-            <DialogTitle sx={{ pb: 0 }}>Add {role}</DialogTitle>
-            <DialogContent>
-              <DialogContentText sx={{ minWidth: "500px" }}>
-                {error ||
-                  "Please enter member's email which is added to this field!"}
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Email Address"
-                type="email"
-                fullWidth
-                variant="standard"
-                value={email}
-                onChange={(event) => {
-                  setEmail(event.target.value);
-                  setError("");
-                }}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button sx={{ color: "#101000" }} onClick={handleCloseAddDialog}>
-                Cancel
-              </Button>
-              <Button onClick={handleSubmitAddition}>Add</Button>
-            </DialogActions>
-          </Dialog>
-          {/* deleting dialog  */}
-          <Dialog
-            open={isOpenDelDialog}
-            TransitionComponent={Transition}
-            keepMounted
-            onClose={handleCloseDelDialog}
-            aria-describedby="alert-dialog-slide-description"
-          >
-            <DialogTitle>Delele {role}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-slide-description">
-                Are you sure you want to delete these members
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseDelDialog} sx={{ color: "#c1121f" }}>
-                Cancel
-              </Button>
-              <Button onClick={handleSubmitDeletion} sx={{ color: "#101000" }}>
-                Delete
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <DeleteDialog
+            isOpenDelDialog={isOpenDelDialog}
+            handleCloseDelDialog={handleCloseDelDialog}
+            role={role}
+            handleSubmitDeletion={handleSubmitDeletion}
+          />
         </Box>
 
-        {isDel === true ? (
-          <div
-            className="selectAll"
-            style={{
-              paddingTop: "10px",
-              paddingLeft: "16px",
-              paddingBottom: "0",
-              marginBottom: "-10px",
-            }}
-          >
+        {isDel && (
+          <div className="selectAll" style={styleDelCheckBoxContainer}>
             <input
               style={{ width: "20px", height: "20px", display: "inline-block" }}
               type="checkbox"
@@ -309,23 +237,15 @@ export default function Member({ members, role, itsRole }) {
               checked={isCheck.length > 0}
             />
             <Button
-              style={{
-                marginBottom: "10px",
-                marginLeft: "15px",
-                color: "rgb(194,100,1)",
-                height: "25px",
-              }}
+              style={styleDelAllButton}
               variant="text"
               onClick={handleOpenDelDialog}
             >
               Delete
             </Button>
           </div>
-        ) : (
-          ""
         )}
 
-        {/* list all of members */}
         <div className="members">
           {members
             ? members.map((elm) => {

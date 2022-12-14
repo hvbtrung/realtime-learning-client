@@ -4,6 +4,16 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
+const style = {
+  display: "flex",
+  alignItems: "center",
+  textAlign: "left",
+  justifyContent: "flex-start",
+  pl: 2,
+  borderBottom: 0.001,
+  borderColor: "#cfcfcf",
+};
+
 export default function Item({
   nameMember,
   isCheck,
@@ -22,19 +32,8 @@ export default function Item({
     }
   };
   return (
-    <Box
-      className="Info-item"
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        textAlign: "left",
-        justifyContent: "flex-start",
-        pl: 2,
-        borderBottom: 0.001,
-        borderColor: "#cfcfcf",
-      }}
-    >
-      {isDel === true ? (
+    <Box className="Info-item" sx={style}>
+      {isDel && (
         <div style={{ paddingTop: "10px" }}>
           <input
             style={{ width: "20px", height: "20px" }}
@@ -47,8 +46,6 @@ export default function Item({
             }}
           />
         </div>
-      ) : (
-        ""
       )}
 
       <div className="Info-item--img">
