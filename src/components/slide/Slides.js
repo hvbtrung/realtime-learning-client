@@ -14,6 +14,8 @@ export default function Slides() {
   const location = useLocation();
   const [slides, setSlides] = useState(null);
   const [slide, setSlide] = useState(null);
+  const [question, setQuestion] = useState(null);
+  const [options, setOptions] = useState(null);
   const [present, setPresent] = useState(false);
 
   const presentation = location.state;
@@ -27,8 +29,13 @@ export default function Slides() {
         validateStatus: () => true,
       });
 
-      setSlides(res.data.data);
-      res.data.data.length && setSlide(res.data.data[0]);
+      const slides = res.data.data;
+      setSlides(slides);
+      if (slides.length) {
+        setSlide(slides[0]);
+        setQuestion(slides[0].question);
+        setOptions(slides[0].options);
+      }
     }
 
     getSlides();
@@ -57,28 +64,32 @@ export default function Slides() {
           {present ? (
             <>
               <div className="presentSlideContainer">
-                <div onClick={handleLeftClick}>
-                  <ArrowCircleLeftOutlinedIcon
-                    className={`icon ${slides.indexOf(slide) === 0 && "unactive"}`}
-                  />
-                </div>
+                <div className="presentSlideWrapper">
+                  <div onClick={handleLeftClick}>
+                    <ArrowCircleLeftOutlinedIcon
+                      className={`icon ${slides.indexOf(slide) === 0 && "unactive"}`}
+                    />
+                  </div>
 
-                <CenterBodySlide slide={slide} />
+                  <div className="presentSlideContent">
+                    <CenterBodySlide slide={slide} />
+                  </div>
 
-                <div onClick={handleRightClick}>
-                  <ArrowCircleRightOutlinedIcon
-                    className={`icon ${slides.indexOf(slide) === slides.length - 1 && "unactive"}`}
-                  />
+                  <div onClick={handleRightClick}>
+                    <ArrowCircleRightOutlinedIcon
+                      className={`icon ${slides.indexOf(slide) === slides.length - 1 && "unactive"}`}
+                    />
+                  </div>
                 </div>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  className="stopBtn"
+                  onClick={() => setPresent(false)}
+                >
+                  Stop Present
+                </Button>
               </div>
-              <Button
-                variant="outlined"
-                color="error"
-                className="stopBtn"
-                onClick={() => setPresent(false)}
-              >
-                Stop Present
-              </Button>
             </>
           ) : (
             <>
@@ -89,15 +100,20 @@ export default function Slides() {
                   setSlides={setSlides}
                   setSlide={setSlide}
                   setPresent={setPresent}
+                  setQuestion={setQuestion}
+                  setOptions={setOptions}
                 />
               </Box>
-              <Box className="slides__body" sx={{ mt: 4 }}>
+              <Box className="slides__body" sx={{ mt: 3 }}>
                 <BodySlide
-                  presentation={presentation}
                   slides={slides}
                   setSlides={setSlides}
                   slide={slide}
                   setSlide={setSlide}
+                  question={question}
+                  setQuestion={setQuestion}
+                  options={options}
+                  setOptions={setOptions}
                 />
               </Box>
             </>

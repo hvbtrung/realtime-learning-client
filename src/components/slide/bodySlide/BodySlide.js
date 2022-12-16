@@ -3,21 +3,35 @@ import { LeftBodySlide } from "../leftBody/LeftBody";
 import RightBody from "../rightBody/RightBody";
 import { CenterBodySlide } from "../centerBody/CenterBody";
 
-const BodySlide = ({ presentation, slides, setSlides, slide, setSlide }) => {
+const BodySlide = ({ slides, setSlides, slide, setSlide, question, setQuestion, options, setOptions }) => {
+
   return slide ? (
     <div className="bodySlideWrapper">
       <div className="leftBodyContainer">
-        <LeftBodySlide slides={slides} setSlide={setSlide} />
+        <LeftBodySlide
+          selectedSlide={slide}
+          setSlide={setSlide}
+          slides={slides}
+          setSlides={setSlides}
+          setQuestion={setQuestion}
+          setOptions={setOptions}
+        />
       </div>
+
       <div className="centerBodyContainer">
         <CenterBodySlide slide={slide} />
       </div>
+
       <div className="rightBodyContainer">
         <RightBody
           slide={slide}
           setSlide={setSlide}
           slides={slides}
           setSlides={setSlides}
+          question={question}
+          setQuestion={setQuestion}
+          options={options}
+          setOptions={setOptions}
         />
       </div>
     </div>

@@ -1,28 +1,33 @@
 .slideContainer{
     .slides {
-        display: flex;
-        flex-direction: column;
         .presentSlideContainer {
-            display: flex;
-            margin-left: -20px;
-            width: 90vw;
-            height: 75vh;
+            .presentSlideWrapper {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+    
+                .icon{
+                    font-size: 50px;
+                    color: #356dff;
+                    cursor: pointer;
+                }
+    
+                .icon.unactive {
+                    color: #ccc;
+                    pointer-events: none;
+                }
 
-            .icon{
-                font-size: 50px;
-                color: #356dff;
-                cursor: pointer;
+                .presentSlideContent {
+                    flex: 1;
+                    height: 90vh;
+                }
             }
+            .stopBtn {
+                display: flex;
+                margin: 10px auto;
+                width: 200px;
 
-            .icon.unactive {
-                color: #ccc;
-                pointer-events: none;
             }
-        }
-        .stopBtn {
-            align-self: center;
-            margin-top: 10px;
-            width: 200px;
         }
     }
 }

@@ -4,6 +4,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const style = {
   position: 'absolute',
@@ -17,24 +18,26 @@ const style = {
   p: 4,
 };
 
-export default function HeaderSlide({ presentation, slides, setSlides, setSlide, setPresent }) {
+export default function HeaderSlide({ presentation, slides, setSlides, setSlide, setPresent, setQuestion, setOptions }) {
   const [showAddSlideModal, setShowAddSlideModal] = useState(false);
-  const [question, setQuestion] = useState(null);
-  const [options, setOptions] = useState([{ name: "", counter: 0 }]);
+  const [question, setQuestionAdd] = useState(null);
+  const [options, setOptionsAdd] = useState([{ name: "", counter: 0 }]);
+
+  const navigate = useNavigate();
 
   const handleAddOption = () => {
-    setOptions([...options, { name: "", counter: 0 }]);
+    setOptionsAdd([...options, { name: "", counter: 0 }]);
   }
 
   const handleRemoveOption = (index) => {
     const newOptions = [...options];
     newOptions.splice(index, 1);
-    setOptions(newOptions);
+    setOptionsAdd(newOptions);
   }
 
   const handleOptionChange = (e, index) => {
     options[index] = { name: e.target.value, counter: 0 };
-    setOptions([...options]);
+    setOptionsAdd([...options]);
   }
 
   const handleSubmit = async (e) => {
@@ -52,10 +55,13 @@ export default function HeaderSlide({ presentation, slides, setSlides, setSlide,
       validateStatus: () => true,
     });
 
-    setSlides([...slides, res.data.data]);
-    setQuestion("");
-    setOptions([{ name: "", counter: 0 }]);
-    setSlide(res.data.data);
+    const slide = res.data.data;
+    setSlides([...slides, slide]);
+    setQuestionAdd("");
+    setOptionsAdd([{ name: "", counter: 0 }]);
+    setSlide(slide);
+    setQuestion(slide.question);
+    setOptions(slide.options);
     setShowAddSlideModal(false);
   }
 
@@ -72,7 +78,7 @@ export default function HeaderSlide({ presentation, slides, setSlides, setSlide,
       >
         <Box className="HeaderSlide__Left">
           <Tooltip title="Back" sx={{ mr: 0 }}>
-            <IconButton>
+            <IconButton onClick={() => navigate("/presentations")}>
               <ArrowBackIcon />
             </IconButton>
           </Tooltip>
@@ -81,7 +87,7 @@ export default function HeaderSlide({ presentation, slides, setSlides, setSlide,
           </Button>
         </Box>
         <Box className="HeaderSlide__Center">
-          <Typography>{presentation.title}</Typography>
+          {presentation.title}
         </Box>
         <Box className="HeaderSlide__Right">
           <Button
@@ -112,12 +118,12 @@ export default function HeaderSlide({ presentation, slides, setSlides, setSlide,
                 variant="outlined"
                 sx={{ width: "100%", mb: 2 }}
                 value={question}
-                onChange={e => setQuestion(e.target.value)}
+                onChange={e => setQuestionAdd(e.target.value)}
               />
               <div>
                 {options.map((option, index) => {
                   return (
-                    <>
+                    <div key={index}>
                       <TextField
                         id="outlined-basic"
                         label="Option"
@@ -144,11 +150,21 @@ export default function HeaderSlide({ presentation, slides, setSlides, setSlide,
                           Remove
                         </Button>
                       )}
-                    </>
+                    </div>
                   )
                 })}
               </div>
-              <Button type="submit" variant="contained" centered>Add SLide</Button>
+              <div className="newSlideBtn">
+                <Button
+                  type="button"
+                  variant="outlined"
+                  className="cancelBtn"
+                  onClick={() => setShowAddSlideModal(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" variant="contained">Add SLide</Button>
+              </div>
             </form>
           </Typography>
         </Box>

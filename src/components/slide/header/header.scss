@@ -1,5 +1,19 @@
+.HeaderSlide__Center {
+    font-weight: 500;
+}
+
 .headerSlideForm {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+.newSlideBtn {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+
+    .cancelBtn {
+        margin-right: 10px;
+    }
 }

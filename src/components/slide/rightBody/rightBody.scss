@@ -1,17 +1,19 @@
 .rightBodyWrapper {
-    margin: 5px 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    
-    .editSlide,
-    .deleteSlide{
-        margin: 20px 10px 0 10px;
+    .editSlide{
+        margin: 10px;
+        .headerSlideForm {
+            display: flex;
+            flex-direction: column;
+            .slideFormOptions {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .slideFormBtn {
+                    width: 70px;
+                    height: 30px;
+                    margin-top: -15px;
+                }
+            }
+        }
     }
-}
-
-.modalButton {
-    display: flex;
-    justify-content: end;
 }
