@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Item from "./Item";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import CustomizedSnackbars from "../notification/snackbars";
 import { useDetailGrContext } from "../../hooks/useDetailGrContext";
 import { DeleteDialog } from "./DelConfirmDialog";
@@ -80,7 +80,6 @@ export default function Member({ members, role, itsRole }) {
 
   // function add member
   const assignRole = async () => {
-    const url = process.env.REACT_APP_API_URL;
 
     if (role === "Co-Owner") {
       role = "ROLE_COOWNER";
@@ -88,20 +87,29 @@ export default function Member({ members, role, itsRole }) {
       role = "ROLE_MEMBER";
     }
 
-    const response = await axios.post(
-      `${url}/api/group/`,
-      {
-        data: {
-          email: email,
-          role: role,
-          groupId: groupId,
-        },
+    // const url = process.env.REACT_APP_API_URL;
+    // const response = await axios.post(
+    //   `${url}/api/group/`,
+    //   {
+    //     data: {
+    //       email: email,
+    //       role: role,
+    //       groupId: groupId,
+    //     },
+    //   },
+    //   {
+    //     withCredentials: true,
+    //     validateStatus: () => true,
+    //   }
+    // );
+
+    const response = await axiosInstance.post(`/api/group/`, {
+      data: {
+        email: email,
+        role: role,
+        groupId: groupId,
       },
-      {
-        withCredentials: true,
-        validateStatus: () => true,
-      }
-    );
+    });
 
     if (response.data.status === "success") {
       setIsReloadMember(!isReloadMember);
@@ -119,16 +127,18 @@ export default function Member({ members, role, itsRole }) {
 
   // function delete member
   const kickOutMember = async ({ userId, groupId }) => {
-    const url = process.env.REACT_APP_API_URL;
+    // const url = process.env.REACT_APP_API_URL;
 
-    await axios.delete(
-      `${url}/api/group/${groupId}/${userId}`,
+    // await axios.delete(
+    //   `${url}/api/group/${groupId}/${userId}`,
 
-      {
-        withCredentials: true,
-        validateStatus: () => true,
-      }
-    );
+    //   {
+    //     withCredentials: true,
+    //     validateStatus: () => true,
+    //   }
+    // );
+
+    await axiosInstance.delete(`/api/group/${groupId}/${userId}`);
   };
 
   // show checkbox select all for deleting members
@@ -249,18 +259,18 @@ export default function Member({ members, role, itsRole }) {
         <div className="members">
           {members
             ? members.map((elm) => {
-                return (
-                  <Item
-                    key={elm.userId._id}
-                    nameMember={elm.userId.name}
-                    id={elm.userId._id}
-                    isCheck={isCheck}
-                    setIsCheck={setIsCheck}
-                    isDel={isDel}
-                    photo={elm.userId.photo}
-                  />
-                );
-              })
+              return (
+                <Item
+                  key={elm.userId._id}
+                  nameMember={elm.userId.name}
+                  id={elm.userId._id}
+                  isCheck={isCheck}
+                  setIsCheck={setIsCheck}
+                  isDel={isDel}
+                  photo={elm.userId.photo}
+                />
+              );
+            })
             : ""}
         </div>
       </Box>

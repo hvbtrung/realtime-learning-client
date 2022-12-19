@@ -2,7 +2,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -20,25 +20,30 @@ export const JoinGroup = () => {
   const [noti, setNoti] = useState(false);
   const [message, setMessage] = useState("");
 
-  const url = process.env.REACT_APP_API_URL;
-
   let groupId = window.location.search.slice(1);
 
   const joinGroup = async () => {
     try {
-      const response = await axios.post(
-        `${url}/api/group/join`,
-        {
-          data: {
-            groupId: groupId,
-            role: "ROLE_MEMBER",
-          },
+      // const response = await axios.post(
+      //   `${url}/api/group/join`,
+      //   {
+      //     data: {
+      //       groupId: groupId,
+      //       role: "ROLE_MEMBER",
+      //     },
+      //   },
+      //   {
+      //     withCredentials: true,
+      //     validateStatus: () => true,
+      //   }
+      // );
+
+      const response = await axiosInstance.post(`/api/group/join`, {
+        data: {
+          groupId: groupId,
+          role: "ROLE_MEMBER",
         },
-        {
-          withCredentials: true,
-          validateStatus: () => true,
-        }
-      );
+      });
 
       if (response.data.status === "error") {
         setStatus("error");
@@ -53,10 +58,12 @@ export const JoinGroup = () => {
   };
   const getGroup = async () => {
     try {
-      const response = await axios.get(`${url}/api/group/${groupId}`, {
-        withCredentials: true,
-        validateStatus: () => true,
-      });
+      // const response = await axios.get(`${url}/api/group/${groupId}`, {
+      //   withCredentials: true,
+      //   validateStatus: () => true,
+      // });
+
+      const response = await axiosInstance.get(`/api/group/${groupId}`);
 
       if (response.data.status === "success") {
         setGroup(response.data.group.groupId);

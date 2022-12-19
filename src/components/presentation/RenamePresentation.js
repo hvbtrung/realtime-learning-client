@@ -9,7 +9,7 @@ import {
   DialogActions,
   InputAdornment,
 } from "@mui/material";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useNotificationContext } from "../../hooks/useNotificationContext";
 
@@ -33,21 +33,28 @@ export default function RenameDialog({
   const [error, setError] = useState("");
 
   const submitUpdatePresentation = async () => {
-    const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
+    // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
 
-    const res = await axios.put(
-      `${SERVER_DOMAIN}/api/presentations`,
-      {
-        data: {
-          titlePresentation: namePresentation.trim(),
-          presentationId: idPresentation,
-        },
+    // const res = await axios.put(
+    //   `${SERVER_DOMAIN}/api/presentations`,
+    //   {
+    //     data: {
+    //       titlePresentation: namePresentation.trim(),
+    //       presentationId: idPresentation,
+    //     },
+    //   },
+    //   {
+    //     withCredentials: true,
+    //     validateStatus: () => true,
+    //   }
+    // );
+
+    const res = await axiosInstance.put(`/api/presentations`, {
+      data: {
+        titlePresentation: namePresentation.trim(),
+        presentationId: idPresentation,
       },
-      {
-        withCredentials: true,
-        validateStatus: () => true,
-      }
-    );
+    });
 
     setTypeNotification(res.data.status);
     setMessageNotification(res.data.message);

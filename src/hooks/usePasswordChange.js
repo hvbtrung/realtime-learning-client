@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 import { useAuthContext } from './useAuthContext';
 
 export const usePasswordChange = () => {
@@ -20,11 +20,13 @@ export const usePasswordChange = () => {
                 passwordNew
             }
 
-            const uri = process.env.REACT_APP_API_URL;
-            const response = await axios.patch(`${uri}/api/users/updateMyPassword`, data, {
-                withCredentials: true,
-                validateStatus: () => true
-            });
+            // const uri = process.env.REACT_APP_API_URL;
+            // const response = await axios.patch(`${uri}/api/users/updateMyPassword`, data, {
+            //     withCredentials: true,
+            //     validateStatus: () => true
+            // });
+
+            const response = await axiosInstance.patch(`/api/users/updateMyPassword`, data);
             const json = response.data;
 
             if (json.status === 'error') {
@@ -34,6 +36,7 @@ export const usePasswordChange = () => {
             }
             if (json.status === 'success') {
                 dispatch({ type: 'LOGIN', payload: json.data.user });
+                localStorage.setItem("token", json.token);
                 setSuccess(true);
                 setIsLoading(false);
             }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import {
   Stack,
   Button,
@@ -39,20 +39,26 @@ export function HeaderPres() {
   };
 
   const submitCreateNewPresentation = async () => {
-    const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
+    // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
 
-    const res = await axios.post(
-      `${SERVER_DOMAIN}/api/presentations`,
-      {
-        data: {
-          titlePresentation: namePresentation.trim(),
-        },
+    // const res = await axios.post(
+    //   `${SERVER_DOMAIN}/api/presentations`,
+    //   {
+    //     data: {
+    //       titlePresentation: namePresentation.trim(),
+    //     },
+    //   },
+    //   {
+    //     withCredentials: true,
+    //     validateStatus: () => true,
+    //   }
+    // );
+
+    const res = await axiosInstance.post(`/api/presentations`, {
+      data: {
+        titlePresentation: namePresentation.trim(),
       },
-      {
-        withCredentials: true,
-        validateStatus: () => true,
-      }
-    );
+    });
 
     setTypeNotification(res.data.status);
     setMessageNotification(res.data.message);

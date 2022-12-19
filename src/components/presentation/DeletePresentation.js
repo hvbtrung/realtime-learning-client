@@ -8,7 +8,7 @@ import {
   DialogContentText,
 } from "@mui/material";
 import * as React from "react";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import { useNotificationContext } from "../../hooks/useNotificationContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
@@ -32,15 +32,18 @@ export default function DeleteDialog({
   const { isReload, setIsReload } = useAuthContext();
 
   const submitDeletePresentation = async () => {
-    const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
+    // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
 
-    const res = await axios.delete(
-      `${SERVER_DOMAIN}/api/presentations/${idPresentation}`,
-      {
-        withCredentials: true,
-        validateStatus: () => true,
-      }
-    );
+    // const res = await axios.delete(
+    //   `${SERVER_DOMAIN}/api/presentations/${idPresentation}`,
+    //   {
+    //     withCredentials: true,
+    //     validateStatus: () => true,
+    //   }
+    // );
+
+    const res = await axiosInstance.delete(`/api/presentations/${idPresentation}`);
+
     closeDelDialogFunc();
     setTypeNotification(res.data.status);
     setMessageNotification(res.data.message);

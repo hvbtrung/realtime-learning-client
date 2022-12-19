@@ -3,7 +3,7 @@ import { Tooltip, IconButton, Box, Typography, Button, Modal, TextField } from "
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 
 const style = {
@@ -49,11 +49,13 @@ export default function HeaderSlide({ presentation, slides, setSlides, setSlide,
       presentationId: presentation._id
     }
 
-    const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
-    const res = await axios.post(`${SERVER_DOMAIN}/api/slides`, data, {
-      withCredentials: true,
-      validateStatus: () => true,
-    });
+    // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
+    // const res = await axios.post(`${SERVER_DOMAIN}/api/slides`, data, {
+    //   withCredentials: true,
+    //   validateStatus: () => true,
+    // });
+
+    const res = await axiosInstance.post(`/api/slides`, data);
 
     const slide = res.data.data;
     setSlides([...slides, slide]);

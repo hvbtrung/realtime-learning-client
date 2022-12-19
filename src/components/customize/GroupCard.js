@@ -17,7 +17,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { validateEmail } from "../group/Member";
 import CustomizedSnackbars from "../notification/snackbars";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 
 export default function GroupCard({ name, id, shortDesc, role, link }) {
   const [open, setOpen] = React.useState(false);
@@ -43,21 +43,28 @@ export default function GroupCard({ name, id, shortDesc, role, link }) {
   }
 
   const sendMail = async () => {
-    const url = process.env.REACT_APP_API_URL;
+    // const url = process.env.REACT_APP_API_URL;
 
-    const response = await axios.post(
-      `${url}/api/groups/invite`,
-      {
-        data: {
-          inviteeEmail: email,
-          link: link,
-        },
+    // const response = await axios.post(
+    //   `${url}/api/groups/invite`,
+    //   {
+    //     data: {
+    //       inviteeEmail: email,
+    //       link: link,
+    //     },
+    //   },
+    //   {
+    //     withCredentials: true,
+    //     validateStatus: () => true,
+    //   }
+    // );
+
+    const response = await axiosInstance.post(`/api/groups/invite`, {
+      data: {
+        inviteeEmail: email,
+        link: link,
       },
-      {
-        withCredentials: true,
-        validateStatus: () => true,
-      }
-    );
+    });
 
     if (response.data.status === "success") {
       setStatus("success");

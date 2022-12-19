@@ -9,7 +9,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
 import DialogTitle from "@mui/material/DialogTitle";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import CustomizedSnackbars from "../notification/snackbars";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
@@ -49,21 +49,28 @@ export default function ButtonCreation() {
   };
 
   const submit = async () => {
-    const url = process.env.REACT_APP_API_URL;
+    // const url = process.env.REACT_APP_API_URL;
 
-    const response = await axios.post(
-      `${url}/api/groups`,
-      {
-        data: {
-          nameGroup: nameGroup.trim(),
-          shortDesc: shortDesc.trim(),
-        },
+    // const response = await axios.post(
+    //   `${url}/api/groups`,
+    //   {
+    //     data: {
+    //       nameGroup: nameGroup.trim(),
+    //       shortDesc: shortDesc.trim(),
+    //     },
+    //   },
+    //   {
+    //     withCredentials: true,
+    //     validateStatus: () => true,
+    //   }
+    // );
+
+    const response = await axiosInstance.post(`/api/groups`, {
+      data: {
+        nameGroup: nameGroup.trim(),
+        shortDesc: shortDesc.trim(),
       },
-      {
-        withCredentials: true,
-        validateStatus: () => true,
-      }
-    );
+    });
 
     const json = response.data;
 

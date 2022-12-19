@@ -4,7 +4,7 @@ import { Box, Typography, Button, Modal } from "@mui/material";
 import { Dropdown, Menu } from "antd";
 import { CopyOutlined, DeleteOutlined, FacebookFilled, GithubFilled, GoogleCircleFilled, ReloadOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../../utils/axiosInstance";
 
 const style = {
   position: 'absolute',
@@ -76,11 +76,13 @@ export function LeftBodySlide({ selectedSlide, setSlide, slides, setSlides, setQ
   )
 
   const handleDeleteSlide = async () => {
-    const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
-    await axios.delete(`${SERVER_DOMAIN}/api/slides/${selectedSlide._id}`, {
-      withCredentials: true,
-      validateStatus: () => true,
-    });
+    // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
+    // await axios.delete(`${SERVER_DOMAIN}/api/slides/${selectedSlide._id}`, {
+    //   withCredentials: true,
+    //   validateStatus: () => true,
+    // });
+
+    await axiosInstance.delete(`/api/slides/${selectedSlide._id}`);
 
     let newSlides = [...slides];
     newSlides = newSlides.filter((newSlide) => newSlide._id !== selectedSlide._id);

@@ -1,6 +1,6 @@
 import "./rightBody.scss";
 import { Button, TextField } from "@mui/material";
-import axios from "axios";
+import axiosInstance from "../../../utils/axiosInstance";
 
 const RightBody = ({ slide, setSlide, slides, setSlides, question, setQuestion, options, setOptions }) => {
   const handleAddOption = () => {
@@ -26,11 +26,13 @@ const RightBody = ({ slide, setSlide, slides, setSlides, question, setQuestion, 
       options,
     }
 
-    const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
-    const res = await axios.patch(`${SERVER_DOMAIN}/api/slides/${slide._id}`, data, {
-      withCredentials: true,
-      validateStatus: () => true,
-    });
+    // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
+    // const res = await axios.patch(`${SERVER_DOMAIN}/api/slides/${slide._id}`, data, {
+    //   withCredentials: true,
+    //   validateStatus: () => true,
+    // });
+
+    const res = await axiosInstance.patch(`/api/slides/${slide._id}`, data);
 
     const index = slides.indexOf(slide);
     let newSlides = [...slides];

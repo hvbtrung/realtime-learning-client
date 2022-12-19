@@ -3,7 +3,7 @@ import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 
 const PresentationExecute = () => {
     const params = useParams();
@@ -13,12 +13,14 @@ const PresentationExecute = () => {
 
     useEffect(() => {
         const getSlides = async () => {
-            const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
-            const res = await axios.get(
-                `${SERVER_DOMAIN}/api/presentations/${params.presentationId}/slides`, {
-                withCredentials: true,
-                validateStatus: () => true,
-            });
+            // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
+            // const res = await axios.get(
+            //     `${SERVER_DOMAIN}/api/presentations/${params.presentationId}/slides`, {
+            //     withCredentials: true,
+            //     validateStatus: () => true,
+            // });
+
+            const res = await axiosInstance.get(`/api/presentations/${params.presentationId}/slides`);
 
             setSlides(res.data.data);
             res.data.data.length && setSlide(res.data.data[0]);
@@ -34,12 +36,14 @@ const PresentationExecute = () => {
             options: newSlide.options
         }
 
-        const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
-        const res = await axios.patch(
-            `${SERVER_DOMAIN}/api/slides/${slide._id}`, data, {
-            withCredentials: true,
-            validateStatus: () => true,
-        });
+        // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
+        // const res = await axios.patch(
+        //     `${SERVER_DOMAIN}/api/slides/${slide._id}`, data, {
+        //     withCredentials: true,
+        //     validateStatus: () => true,
+        // });
+
+        const res = await axiosInstance.patch(`/api/slides/${slide._id}`, data);
 
         setSelectedOption(null);
         const index = slides.indexOf(slide);

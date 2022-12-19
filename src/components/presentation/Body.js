@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import customizeDate from "../customize/CustomizeDate";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useNotificationContext } from "../../hooks/useNotificationContext";
@@ -29,13 +29,13 @@ export function BodyPres() {
   const { isReload } = useAuthContext();
 
   const getAllPresentations = async () => {
-    const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
-
     try {
-      const res = await axios.get(`${SERVER_DOMAIN}/api/presentations`, {
-        withCredentials: true,
-        validateStatus: () => true,
-      });
+      // const res = await axios.get(`${SERVER_DOMAIN}/api/presentations`, {
+      //   withCredentials: true,
+      //   validateStatus: () => true,
+      // });
+
+      const res = await axiosInstance.get(`/api/presentations`);
 
       let presentations = res.data.presentations;
       for (let presentation of presentations) {

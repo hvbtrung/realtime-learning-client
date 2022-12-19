@@ -5,7 +5,7 @@ import BodySlide from "./bodySlide/BodySlide";
 import { CenterBodySlide } from "./centerBody/CenterBody";
 import { useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 
@@ -22,12 +22,14 @@ export default function Slides() {
 
   useEffect(() => {
     const getSlides = async () => {
-      const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
-      const res = await axios.get(
-        `${SERVER_DOMAIN}/api/presentations/${params.presentationId}/slides`, {
-        withCredentials: true,
-        validateStatus: () => true,
-      });
+      // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
+      // const res = await axios.get(
+      //   `${SERVER_DOMAIN}/api/presentations/${params.presentationId}/slides`, {
+      //   withCredentials: true,
+      //   validateStatus: () => true,
+      // });
+
+      const res = await axiosInstance.get(`/api/presentations/${params.presentationId}/slides`);
 
       const slides = res.data.data;
       setSlides(slides);
@@ -45,6 +47,8 @@ export default function Slides() {
     const index = slides.indexOf(slide);
     if (index !== 0) {
       setSlide(slides[slides.indexOf(slide) - 1]);
+      setQuestion(slides[slides.indexOf(slide) - 1].question);
+      setOptions(slides[slides.indexOf(slide) - 1].options);
     }
   }
 
@@ -52,6 +56,8 @@ export default function Slides() {
     const index = slides.indexOf(slide);
     if (index !== slides.length - 1) {
       setSlide(slides[slides.indexOf(slide) + 1]);
+      setQuestion(slides[slides.indexOf(slide) + 1].question);
+      setOptions(slides[slides.indexOf(slide) + 1].options);
     }
   }
 

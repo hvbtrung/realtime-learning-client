@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { FaFacebookF, FaGoogle, FaGithub } from "react-icons/fa";
 
@@ -16,17 +16,20 @@ function Login({ href }) {
 
   useEffect(() => {
     const getUser = async () => {
-      const response = await axios.get(
-        `${url}/api/users/social/login/success`,
-        {
-          withCredentials: true,
-          validateStatus: () => true,
-        }
-      );
+      // const response = await axios.get(
+      //   `${url}/api/users/social/login/success`,
+      //   {
+      //     withCredentials: true,
+      //     validateStatus: () => true,
+      //   }
+      // );
+
+      const response = await axiosInstance.get(`/api/users/social/login/success`);
       const json = response.data;
 
       if (json.status === "success") {
         dispatch({ type: "LOGIN", payload: json.data.user });
+        localStorage.setItem("token", json.token);
       }
     };
     getUser();

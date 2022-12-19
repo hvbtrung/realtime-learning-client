@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Member from "./Member";
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 import { useDetailGrContext } from "../../hooks/useDetailGrContext";
 
 export default function Group() {
@@ -9,8 +9,6 @@ export default function Group() {
   const [members, setMembers] = useState([]);
   const [role, setRole] = useState("");
   const { isReloadMember } = useDetailGrContext();
-
-  const url = process.env.REACT_APP_API_URL;
 
   const pathname = window.location.pathname;
 
@@ -32,13 +30,16 @@ export default function Group() {
   };
   const getMembers = async ({ type }) => {
     try {
-      const response = await axios.get(
-        `${url}/api/group?groupId=${id}&type=${type}`,
-        {
-          withCredentials: true,
-          validateStatus: () => true,
-        }
-      );
+      // const url = process.env.REACT_APP_API_URL;
+      // const response = await axios.get(
+      //   `${url}/api/group?groupId=${id}&type=${type}`,
+      //   {
+      //     withCredentials: true,
+      //     validateStatus: () => true,
+      //   }
+      // );
+
+      const response = await axiosInstance.get(`/api/group?groupId=${id}&type=${type}`);
 
       if (type === "ROLE_OWNER") {
         setOwners(response.data.members);

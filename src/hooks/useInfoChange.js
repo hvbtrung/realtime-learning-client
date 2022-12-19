@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 import { useAuthContext } from './useAuthContext';
 
 export const useInfoChange = () => {
@@ -30,11 +31,12 @@ export const useInfoChange = () => {
                 photo: url
             }
 
-            const uri = process.env.REACT_APP_API_URL;
-            const response = await axios.patch(`${uri}/api/users/updateMe`, newUserInfo, {
-                withCredentials: true,
-                validateStatus: () => true
-            });
+            // const uri = process.env.REACT_APP_API_URL;
+            // const response = await axios.patch(`${uri}/api/users/updateMe`, newUserInfo, {
+            //     withCredentials: true,
+            //     validateStatus: () => true
+            // });
+            const response = await axiosInstance.patch(`/api/users/updateMe`, newUserInfo);
             const json = response.data;
 
             if (json.status === 'error') {

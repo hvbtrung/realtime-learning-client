@@ -77,7 +77,10 @@ function App() {
               }
             />
 
-            <Route path="/group/join" element={<JoinGroup />} />
+            <Route
+              path="/group/join"
+              element={user ? <JoinGroup /> : <Navigate to="/login" />}
+            />
 
             <Route
               path="/profile"

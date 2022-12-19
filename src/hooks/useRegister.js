@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 
 export const useRegister = () => {
     const [success, setSuccess] = useState(null);
@@ -11,11 +11,13 @@ export const useRegister = () => {
         setSuccess(null);
         setError(null);
 
-        const url = process.env.REACT_APP_API_URL;
-        const response = await axios.post(`${url}/api/users/register`, { email, password, name }, {
-            withCredentials: true,
-            validateStatus: () => true
-        });
+        // const url = process.env.REACT_APP_API_URL;
+        // const response = await axios.post(`${url}/api/users/register`, { email, password, name }, {
+        //     withCredentials: true,
+        //     validateStatus: () => true
+        // });
+
+        const response = await axiosInstance.post(`/api/users/register`, { email, password, name });
         const json = response.data;
 
         if (json.status === 'error') {
