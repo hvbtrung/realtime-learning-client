@@ -15,7 +15,14 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import { useNotificationContext } from "../../hooks/useNotificationContext";
 import CustomizedSnackbars from "../notification/snackbars";
 
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { usePresentationContext } from "../../hooks/usePresentationContext";
+
 export function HeaderPres() {
+  const { typePresentation, setTypePresentation } = usePresentationContext();
+
   const { isReload, setIsReload } = useAuthContext();
   const {
     setTypeNotification,
@@ -39,21 +46,6 @@ export function HeaderPres() {
   };
 
   const submitCreateNewPresentation = async () => {
-    // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
-
-    // const res = await axios.post(
-    //   `${SERVER_DOMAIN}/api/presentations`,
-    //   {
-    //     data: {
-    //       titlePresentation: namePresentation.trim(),
-    //     },
-    //   },
-    //   {
-    //     withCredentials: true,
-    //     validateStatus: () => true,
-    //   }
-    // );
-
     const res = await axiosInstance.post(`/api/presentations`, {
       data: {
         titlePresentation: namePresentation.trim(),
@@ -77,6 +69,10 @@ export function HeaderPres() {
     submitCreateNewPresentation();
   };
 
+  const handleSelectedChange = (event) => {
+    setTypePresentation(event.target.value);
+    setIsReload(!isReload);
+  };
   return (
     <div className="container">
       {typeNotification && (
@@ -98,6 +94,14 @@ export function HeaderPres() {
         >
           New Presentation
         </Button>
+        <FormControl sx={{ m: 1, minWidth: 160 }} size="small">
+          <Select value={typePresentation} onChange={handleSelectedChange}>
+            <MenuItem selected value="ownedbyme">
+              Owned by me
+            </MenuItem>
+            <MenuItem value="sharedwithme">Shared with me</MenuItem>
+          </Select>
+        </FormControl>
       </Stack>
 
       <Dialog open={openCreatePresDialog}>

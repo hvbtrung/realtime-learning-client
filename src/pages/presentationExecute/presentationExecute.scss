@@ -2,6 +2,39 @@
     margin: 0 auto;
     background-color: #fff;
     width: 80%;
+    .slideInteraction{
+        position: absolute;
+        display:flex;
+        flex-direction: row;
+        z-index: 3;
+        
+        &__item{
+           
+            margin-top:10px;
+            
+            &--containIcon{
+              position: relative;
+            }
+            &--icon{
+                color:#49b6ff;
+            }
+            &--smallIcon{
+                position: absolute;
+                font-size:25px;
+                color:#4e7df4;
+                margin:0;
+                padding:0;
+                top:-1px;
+                z-index: 3;
+           
+                right:5px;
+                
+            }
+            &--help{
+                top:1px;
+            }
+        }
+    }
     .preExecuteWrapper {
         display: flex;
         flex-direction: column;

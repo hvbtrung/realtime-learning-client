@@ -24,7 +24,7 @@ function Navbar() {
             <h1>Realtime Learning</h1>
           </Link>
         </Box>
-        <Box sx={{ width: "50%" }}>
+        <Box sx={{ width: "55%" }}>
           {user && (
             <Box
               sx={{

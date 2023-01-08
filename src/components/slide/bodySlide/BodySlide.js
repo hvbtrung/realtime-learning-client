@@ -3,8 +3,16 @@ import { LeftBodySlide } from "../leftBody/LeftBody";
 import RightBody from "../rightBody/RightBody";
 import { CenterBodySlide } from "../centerBody/CenterBody";
 
-const BodySlide = ({ slides, setSlides, slide, setSlide, question, setQuestion, options, setOptions }) => {
-
+const BodySlide = ({
+  slides,
+  setSlides,
+  slide,
+  setSlide,
+  question,
+  setQuestion,
+  options,
+  setOptions,
+}) => {
   return slide ? (
     <div className="bodySlideWrapper">
       <div className="leftBodyContainer">

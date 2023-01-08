@@ -2,23 +2,38 @@ import "./leftBody.scss";
 import ItemLeftBody from "../itemLeftBody/ItemLeftBody";
 import { Box, Typography, Button, Modal } from "@mui/material";
 import { Dropdown, Menu } from "antd";
-import { CopyOutlined, DeleteOutlined, FacebookFilled, GithubFilled, GoogleCircleFilled, ReloadOutlined, ShareAltOutlined } from "@ant-design/icons";
+import {
+  CopyOutlined,
+  DeleteOutlined,
+  FacebookFilled,
+  GithubFilled,
+  GoogleCircleFilled,
+  ReloadOutlined,
+  ShareAltOutlined,
+} from "@ant-design/icons";
 import { useState } from "react";
 import axiosInstance from "../../../utils/axiosInstance";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 600,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
 
-export function LeftBodySlide({ selectedSlide, setSlide, slides, setSlides, setQuestion, setOptions }) {
+export function LeftBodySlide({
+  selectedSlide,
+  setSlide,
+  slides,
+  setSlides,
+  setQuestion,
+  setOptions,
+}) {
   const [showDeleteSlideModal, setShowDeleteSlideModal] = useState(false);
 
   const menu = (
@@ -36,7 +51,7 @@ export function LeftBodySlide({ selectedSlide, setSlide, slides, setSlides, setQ
         {
           label: "Copy",
           key: "copy",
-          icon: <CopyOutlined />
+          icon: <CopyOutlined />,
         },
         {
           label: "Share",
@@ -46,34 +61,34 @@ export function LeftBodySlide({ selectedSlide, setSlide, slides, setSlides, setQ
             {
               label: "Facebook",
               key: "fb",
-              icon: <FacebookFilled />
+              icon: <FacebookFilled />,
             },
             {
               label: "Github",
               key: "gh",
-              icon: <GithubFilled />
+              icon: <GithubFilled />,
             },
             {
               label: "Google",
               key: "gg",
-              icon: <GoogleCircleFilled />
+              icon: <GoogleCircleFilled />,
             },
           ],
         },
         {
           label: "Reload",
           key: "reload",
-          icon: <ReloadOutlined />
+          icon: <ReloadOutlined />,
         },
         {
           label: "Delete",
           key: "delete",
           danger: true,
-          icon: <DeleteOutlined />
+          icon: <DeleteOutlined />,
         },
       ]}
     ></Menu>
-  )
+  );
 
   const handleDeleteSlide = async () => {
     // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
@@ -85,20 +100,18 @@ export function LeftBodySlide({ selectedSlide, setSlide, slides, setSlides, setQ
     await axiosInstance.delete(`/api/slides/${selectedSlide._id}`);
 
     let newSlides = [...slides];
-    newSlides = newSlides.filter((newSlide) => newSlide._id !== selectedSlide._id);
+    newSlides = newSlides.filter(
+      (newSlide) => newSlide._id !== selectedSlide._id
+    );
     setSlides(newSlides);
     setSlide(newSlides[0]);
     setShowDeleteSlideModal(false);
-  }
+  };
 
   return (
     <div className="leftBodyContainer">
       {slides.map((slide, index) => (
-        <Dropdown
-          overlay={menu}
-          trigger={["contextMenu"]}
-          key={index}
-        >
+        <Dropdown overlay={menu} trigger={["contextMenu"]} key={index}>
           <div
             className={`leftBodyItem ${selectedSlide === slide && "active"}`}
             onClick={() => {
@@ -107,13 +120,10 @@ export function LeftBodySlide({ selectedSlide, setSlide, slides, setSlides, setQ
               setOptions(slide.options);
             }}
           >
-            <ItemLeftBody
-              slide={slide}
-            />
+            <ItemLeftBody slide={slide} />
           </div>
         </Dropdown>
-      ))
-      }
+      ))}
 
       <Modal
         open={showDeleteSlideModal}
@@ -148,6 +158,6 @@ export function LeftBodySlide({ selectedSlide, setSlide, slides, setSlides, setQ
           </div>
         </Box>
       </Modal>
-    </div >
+    </div>
   );
 }

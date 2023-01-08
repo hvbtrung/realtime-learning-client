@@ -9,12 +9,16 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ShareIcon from "@mui/icons-material/Share";
 import GroupsIcon from "@mui/icons-material/Groups";
 import EditIcon from "@mui/icons-material/Edit";
+import { AddCollaboratorDialog } from "./AddPresentationDialog";
+import { usePresentationContext } from "../../hooks/usePresentationContext";
 
 export function EditButton({ namePresentation, idPresentation }) {
+  const { typePresentation } = usePresentationContext();
+
   const [isOpenOptionDialog, setIsOpenOptionDialog] = useState(null);
   const [isOpenRenameDialog, setIsOpenRenameDialog] = useState(null);
   const [isOpenDelDialog, setIsOpenDelDialog] = useState(false);
-
+  const [isOpenAddCollabDialog, setOpenAddCollabDialog] = useState(false);
   const openRenamDialogBool = Boolean(isOpenRenameDialog);
   const openMenuBool = Boolean(isOpenOptionDialog);
   const openDelDialogBool = Boolean(isOpenDelDialog);
@@ -43,6 +47,15 @@ export function EditButton({ namePresentation, idPresentation }) {
     setIsOpenDelDialog(null);
   };
 
+  const openAddCollabDialogFunc = () => {
+    setOpenAddCollabDialog(true);
+    closeOptionDialog();
+  };
+
+  const closeAddCollabDialogFunc = () => {
+    setOpenAddCollabDialog(null);
+  };
+
   return (
     <div>
       <RenameDialog
@@ -55,6 +68,12 @@ export function EditButton({ namePresentation, idPresentation }) {
         openDelDialog={openDelDialogBool}
         closeDelDialogFunc={closeDelDialogFunc}
         namePresentation={namePresentation}
+        idPresentation={idPresentation}
+      />
+
+      <AddCollaboratorDialog
+        isOpenAddDialog={isOpenAddCollabDialog}
+        handleCloseAddDialog={closeAddCollabDialogFunc}
         idPresentation={idPresentation}
       />
       <Menu
@@ -76,15 +95,20 @@ export function EditButton({ namePresentation, idPresentation }) {
           <EditIcon sx={{ mr: "10px" }} />
           Rename
         </MenuItem>
-        <MenuItem onClick={closeOptionDialog}>
-          <GroupsIcon sx={{ mr: "10px" }} /> Invite collaborators
-        </MenuItem>
+        {typePresentation === "sharedwithme" || (
+          <MenuItem onClick={openAddCollabDialogFunc}>
+            <GroupsIcon sx={{ mr: "10px" }} /> Invite collaborators
+          </MenuItem>
+        )}
         <MenuItem onClick={closeOptionDialog}>
           <ShareIcon sx={{ mr: "10px" }} /> Share
         </MenuItem>
-        <MenuItem onClick={openDelDialogFunc}>
-          <DeleteIcon sx={{ mr: "10px" }} /> Delete
-        </MenuItem>
+
+        {typePresentation === "sharedwithme" || (
+          <MenuItem onClick={openDelDialogFunc}>
+            <DeleteIcon sx={{ mr: "10px" }} /> Delete
+          </MenuItem>
+        )}
       </Menu>
       <Tooltip title="Edit" sx={{ mt: 1, ml: 2 }} onClick={openOptionDialog}>
         <IconButton>

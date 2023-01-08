@@ -30,16 +30,9 @@ export default function Group() {
   };
   const getMembers = async ({ type }) => {
     try {
-      // const url = process.env.REACT_APP_API_URL;
-      // const response = await axios.get(
-      //   `${url}/api/group?groupId=${id}&type=${type}`,
-      //   {
-      //     withCredentials: true,
-      //     validateStatus: () => true,
-      //   }
-      // );
-
-      const response = await axiosInstance.get(`/api/group?groupId=${id}&type=${type}`);
+      const response = await axiosInstance.get(
+        `/api/group?groupId=${id}&type=${type}`
+      );
 
       if (type === "ROLE_OWNER") {
         setOwners(response.data.members);

@@ -52,7 +52,6 @@ export default function AccountMenu({ photo }) {
 
   return (
     <React.Fragment>
-      {" "}
       <Tooltip title="Account settings">
         <IconButton
           onClick={handleClick}
@@ -82,22 +81,22 @@ export default function AccountMenu({ photo }) {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          <Link
-            to="/profile"
-            style={{ textDecoration: "none", color: "#000000DE" }}
-          >
+        <Link
+          to="/profile"
+          style={{ textDecoration: "none", color: "#000000DE" }}
+        >
+          <MenuItem>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
             Settings
-          </Link>
-        </MenuItem>
-        <MenuItem>
+          </MenuItem>
+        </Link>
+        <MenuItem onClick={handleLogoutClick}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          <div onClick={handleLogoutClick}>Log out</div>
+          <div>Log out</div>
         </MenuItem>
       </Menu>
     </React.Fragment>

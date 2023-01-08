@@ -13,6 +13,7 @@ import { Presentation } from "./components/presentation/Presentation";
 import Slides from "./components/slide/Slides";
 import Profile from "./pages/profile/Profile";
 import PresentationExecute from "./pages/presentationExecute/PresentationExecute";
+import { NotificationProvider } from "../src/context/NotificationContext";
 
 function App() {
   const { user } = useAuthContext();
@@ -51,7 +52,15 @@ function App() {
 
             <Route
               path="/presentations"
-              element={user ? <Presentation /> : <Navigate to="/login" />}
+              element={
+                user ? (
+                  <NotificationProvider>
+                    <Presentation />
+                  </NotificationProvider>
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
             />
 
             <Route

@@ -1,5 +1,43 @@
 .slideContainer{
     .slides {
+        .slideInteraction{
+            position: absolute;
+            display:flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            z-index: 3;
+            margin-left:40px;
+            left:auto;
+           
+            
+            &__item{
+                margin-left: 10px;
+                margin-top:10px;
+                
+                &--containIcon{
+                  position: relative;
+                }
+                &--icon{
+                    color:#49b6ff;
+                }
+                &--smallIcon{
+                    position: absolute;
+                    font-size:25px;
+                    color:#4e7df4;
+                    margin:0;
+                    padding:0;
+                    top:-1px;
+                    z-index: 3;
+               
+                    right:5px;
+                    
+                }
+                &--help{
+                    top:1px;
+                }
+            }
+        }
         .presentSlideContainer {
             .presentSlideWrapper {
                 display: flex;
