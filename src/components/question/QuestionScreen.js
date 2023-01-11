@@ -1,6 +1,6 @@
 import "./QuestionScreen.scss";
 import * as React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useReducer } from "react";
 import PropTypes from "prop-types";
 import SendIcon from "@mui/icons-material/Send";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
@@ -17,12 +17,34 @@ import {
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
-
+import socketIOClient from "socket.io-client";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import {
+  initQuestionState,
+  QuestionReducer,
+} from "./questionReducer/QuestionReducer";
+import {
+  setQuestion,
+  setAddQuestion,
+  setUpVote,
+  setMarkAnswer,
+  setSelectedOption,
+  sortBy,
+  setDownVote,
+  setQuestions,
+} from "./questionReducer/Action";
+import {
+  SORT_NEWEST,
+  SORT_TOPVOTE,
+  SORT_ANSWERED,
+  SORT_UNANSWER,
+  UP_VOTE,
+  DOWN_VOTE,
+} from "./questionReducer/Constant";
+import axiosInstance from "../../utils/axiosInstance";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -62,88 +84,170 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-const questions = [
-  {
-    id: "1",
-    totalVotes: 12,
-    name: "Vinh",
-    content:
-      "Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus",
-
-    isAnswered: true,
-  },
-
-  {
-    id: "2",
-    totalVotes: 2,
-    name: "Nguyên",
-    content:
-      "How to can I install it without liscen and how to build a simple program with that IDE",
-
-    isAnswered: false,
-  },
-  {
-    id: "3",
-    totalVotes: 10,
-    name: "Thanh",
-    content:
-      " Cras mattis consectetur purus sit amet fermentum. Cras justo lorem odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam Morbi leo risus, porta acconsectetur ac, vestibulum at eros. risus, porta ac consecteturac, vestibulum at eros. Cras mattis consectetur purus sit amet",
-
-    isAnswered: false,
-  },
-];
-
 export default function QuestionScreen({
   isOpenQuestion,
   closeQuestionDialog,
 }) {
-  const [selectedOption, setSelectedOption] = useState("");
-  const [isLoad, setIsLoad] = useState(false);
-  const [questionContent, setQuestionContent] = useState(null);
-
+  const userInfo = JSON.parse(localStorage.getItem("user"));
+  const [userId] = useState(userInfo._id);
+  const [nameUser] = useState(userInfo.name);
   const questionInput = useRef();
+  const socketRef = useRef();
+  const messagesEnd = useRef();
+  let pathname = window.location.pathname.slice("/presentations/".length);
+  let presentationId = pathname.replace("/slides", "");
+  presentationId = presentationId.replace("/execute", "");
+  const [state, dispatch] = useReducer(QuestionReducer, initQuestionState);
+  var { questions, question, selectedOption } = state;
 
-  useEffect(() => {}, [isLoad]);
+  useEffect(
+    () => {
+      getAllQuestions();
 
-  const handleVoteItem = (id, type) => {
-    questions.map((question) => {
-      if (question.id === id && type === "up") {
-        question.totalVotes = question.totalVotes + 1;
-      } else if (question.id === id && type === "down") {
-        question.totalVotes = question.totalVotes - 1;
-      }
-    });
+      socketRef.current = socketIOClient.connect(process.env.REACT_APP_API_URL);
+      socketRef.current.emit("createRoom", `${presentationId}-questions`);
+      socketRef.current.on("sendMessageToClient", (data) => {
+        // console.log("question: ", data);
+        dispatch(
+          setAddQuestion({
+            questionId: data._id,
+            totalVotes: data.totalVotes,
+            asker: { name: data.name },
+            content: data.message,
+            isAnswered: data.isAnswered,
+          })
+        );
+      });
 
-    setIsLoad(!isLoad);
+      socketRef.current.on(
+        "sendDataVoteQuestionToClient",
+        ({ questionId, votingType }) => {
+          if (votingType === UP_VOTE) {
+            dispatch(setUpVote(questionId));
+          } else if (votingType === DOWN_VOTE) {
+            dispatch(setDownVote(questionId));
+          }
+          dispatch(sortBy(selectedOption));
+        }
+      );
+
+      socketRef.current.on("sendMarkQuestionToClient", ({ questionId }) => {
+        dispatch(setMarkAnswer(questionId));
+        dispatch(sortBy(selectedOption));
+      });
+
+      return () => {
+        socketRef.current.disconnect();
+      };
+    },
+    // eslint-disable-next-line
+    []
+  );
+
+  const getAllQuestions = async () => {
+    const res = await axiosInstance.get(
+      `/api/questions?presentationId=${presentationId}`
+    );
+
+    const resQuestions = res.data.questions;
+    dispatch(setQuestions(resQuestions));
+    dispatch(sortBy(selectedOption));
   };
 
-  const handleMarkAnswer = (id) => {
-    for (let question of questions) {
-      if (question.id === id) {
-        question.isAnswered = !question.isAnswered;
-        break;
-      }
+  const sendQuestion = ({ questionId, content, totalVotes, isAnswered }) => {
+    socketRef.current.emit("sendMessageToServer", {
+      message: content,
+      questionId: questionId,
+      userId: userId,
+      name: nameUser,
+      totalVotes: totalVotes,
+      isAnswered: isAnswered,
+    });
+  };
+
+  const sendVote = ({ questionId, votingType }) => {
+    socketRef.current.emit("sendDataVoteQuestionToServer", {
+      questionId: questionId,
+      votingType: votingType,
+    });
+  };
+
+  const sendMarkQuestion = ({ questionId }) => {
+    socketRef.current.emit("sendMarkQuestionToServer", {
+      questionId,
+    });
+  };
+
+  const handleVoteQuestion = async (questionId, votingType) => {
+    const isVoted = await axiosInstance.get(
+      `/api/vote?questionId=${questionId}&votingType=${votingType}`
+    );
+
+    if (
+      isVoted.data.status === "success" &&
+      votingType === isVoted.data.vote.votingType
+    ) {
+      return;
     }
-
-    setIsLoad(!isLoad);
-  };
-
-  const selectOption = (event) => {
-    setSelectedOption(event.target.value);
-  };
-
-  const handleSendQuestion = () => {
-    questions.push({
-      id: "4",
-      totalVotes: 0,
-      name: "Killer B",
-      content: questionContent,
-      isAnswered: false,
+    const res = await axiosInstance.post(`/api/vote`, {
+      data: {
+        questionId: questionId,
+        votingType: votingType,
+      },
     });
-    setIsLoad(!isLoad);
-    setQuestionContent("");
+
+    // console.log("handleVoteQuestion", res);
+
+    if (res.data.status === "success") {
+      sendVote({ questionId, votingType });
+    }
+  };
+
+  const handleSendQuestion = async () => {
+    const res = await axiosInstance.post(`/api/questions`, {
+      data: {
+        content: question,
+        presentationId: presentationId,
+      },
+    });
+
+    let resQuestion = res.data.question;
+
+    sendQuestion({
+      questionId: resQuestion._id,
+      content: resQuestion.content,
+      totalVotes: resQuestion.totalVotes ? 0 : 0,
+      isAnswered: resQuestion.isAnswered,
+    });
+    dispatch(setQuestion(""));
+    scrollToBottom();
+    dispatch(sortBy(selectedOption));
     questionInput.current.focus();
   };
+
+  const handleMarkQuestion = async (questionId, isAnswered, presentationId) => {
+    const res = await axiosInstance.patch(`/api/questions`, {
+      data: {
+        questionId,
+        isAnswered: isAnswered,
+        presentationId,
+      },
+    });
+
+    console.log("data is: ", res);
+
+    if (res.data.status === "success") {
+      sendMarkQuestion({ questionId });
+    }
+  };
+
+  const scrollToBottom = () => {
+    messagesEnd.current.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  };
+
   return (
     <div>
       <BootstrapDialog
@@ -171,23 +275,32 @@ export default function QuestionScreen({
                 id="demo-select-small"
                 value={selectedOption}
                 label="Sort"
-                onChange={selectOption}
+                onChange={(e) => {
+                  dispatch(setSelectedOption(e.target.value));
+                  dispatch(sortBy(e.target.value));
+                }}
               >
-                <MenuItem value="unanswer">Unanswer</MenuItem>
-                <MenuItem value="answered">Answered</MenuItem>
-                <MenuItem value="topvote">Top Vote</MenuItem>
-                <MenuItem value="newest">Newest</MenuItem>
+                <MenuItem value={SORT_UNANSWER}>Unanswer</MenuItem>
+                <MenuItem value={SORT_ANSWERED}>Answered</MenuItem>
+                <MenuItem value={SORT_TOPVOTE}>Top Vote</MenuItem>
+                <MenuItem value={SORT_NEWEST}>Newest</MenuItem>
               </Select>
             </FormControl>
           </Box>
 
           {questions.map((question) => {
             return (
-              <Box className="questionContent__item" key={question.id}>
+              <Box
+                className="questionContent__item"
+                key={question._id}
+                ref={messagesEnd}
+              >
                 <Box className="questionContent__item--left vote">
                   <Tooltip
                     className="questionContent__item--voteItem upvote"
-                    onClick={() => handleVoteItem(question.id, "up")}
+                    onClick={() => {
+                      handleVoteQuestion(question._id, UP_VOTE);
+                    }}
                   >
                     <IconButton>
                       <ArrowUpwardRoundedIcon />
@@ -195,8 +308,10 @@ export default function QuestionScreen({
                   </Tooltip>
                   <div>{question.totalVotes}</div>
                   <Tooltip
-                    className="questionContent__item--voteItem downvote"
-                    onClick={() => handleVoteItem(question.id, "down")}
+                    className="questionContent__item--voteItem downvote "
+                    onClick={() => {
+                      handleVoteQuestion(question._id, DOWN_VOTE);
+                    }}
                   >
                     <IconButton>
                       <ArrowDownwardRoundedIcon />
@@ -207,12 +322,16 @@ export default function QuestionScreen({
                 <Box className="questionContent__item--center">
                   <Box className="questionContent__item--secondaryTitle">
                     <small className="questionContent__item--Name">
-                      {question.name}
+                      {question.asker.name}
                     </small>
                     <small
                       className="questionContent__item--isAnswered"
                       onClick={() => {
-                        handleMarkAnswer(question.id);
+                        handleMarkQuestion(
+                          question._id,
+                          question.isAnswered,
+                          presentationId
+                        );
                       }}
                     >
                       {question.isAnswered ? "Answered" : "Unanswer"}
@@ -232,9 +351,9 @@ export default function QuestionScreen({
         <DialogActions className="QuestionInput">
           <input
             className="QuestionInput--content"
-            value={questionContent}
+            value={question}
             onChange={(e) => {
-              setQuestionContent(e.target.value);
+              dispatch(setQuestion(e.target.value));
             }}
             placeholder="Type your question..."
             ref={questionInput}

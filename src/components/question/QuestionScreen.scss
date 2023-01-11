@@ -1,8 +1,18 @@
 #Question-Dialog-Title{
     border-bottom: 0.15px solid #efefef;
 }
-.questionContent{
 
+.questionContent{
+    min-height: 60vh;
+    max-height: 60vh;
+    min-width: 600px;
+    max-width: 600px;
+    .disable{
+        background: #f2f2f2 !important;
+        color: white !important;;
+        
+    }
+   
     &__select{
         margin-right:0;
         text-align: right;
@@ -76,6 +86,8 @@
         &--voteItem{
             color:#6a994e !important;
         }
+
+       
     }
 }
 

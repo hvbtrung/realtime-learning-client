@@ -77,7 +77,7 @@ export default function ChatScreen({
   let pathname = window.location.pathname.slice("/presentations/".length);
   let presentationId = pathname.replace("/slides", "");
   presentationId = presentationId.replace("/execute", "");
-  console.log("presentationId", presentationId);
+
   const [contentChats, setContentChats] = useState([]);
 
   useEffect(() => {
@@ -120,6 +120,7 @@ export default function ChatScreen({
         };
       })
     );
+    scrollToBottom();
   };
 
   const handleReceiveMessage = (receivedData) => {
@@ -132,7 +133,7 @@ export default function ChatScreen({
       },
     ]);
 
-    if (userId !== receivedData.userId && isOpenChat === true) {
+    if (userId !== receivedData.userId) {
       setMessageNotification("You have new message");
       setIsAppearNotification((prev) => !prev);
     }
@@ -141,10 +142,12 @@ export default function ChatScreen({
   };
 
   const scrollToBottom = () => {
-    messagesEnd.current.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    if (isOpenChat === true) {
+      messagesEnd.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
   };
 
   const sendMessage = () => {
@@ -171,6 +174,7 @@ export default function ChatScreen({
       <Box
         className={`chatContent__item ${content.type === "left" || "right"}`}
         key={index}
+        ref={messagesEnd}
       >
         <Box className="chatContent__item--avatar">
           <Avatar sx={{ width: 25, height: 25 }} alt="User Avatar">
@@ -200,8 +204,10 @@ export default function ChatScreen({
         </BootstrapDialogTitle>
         <DialogContent className="chatContent">
           {messageRender}
+
           <div id="messageEnd" ref={messagesEnd} />
         </DialogContent>
+
         <DialogActions className="ChatInput">
           <input
             className="ChatInput--content"

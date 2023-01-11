@@ -159,6 +159,7 @@ export default function Slides() {
                   </div>
                   {typeNotification && (
                     <CustomizedSnackbars
+                      key={"chatNotify"}
                       type={typeNotification}
                       status={isAppearNotification}
                       message={messageNotification}
