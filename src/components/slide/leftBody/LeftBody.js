@@ -5,6 +5,10 @@ import { Dropdown, Menu } from "antd";
 import { CopyOutlined, DeleteOutlined, FacebookFilled, GithubFilled, GoogleCircleFilled, ReloadOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import axiosInstance from "../../../utils/axiosInstance";
+import { useOutletContext } from "react-router-dom";
+import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
+import SegmentOutlinedIcon from '@mui/icons-material/SegmentOutlined';
+import DragHandleOutlinedIcon from '@mui/icons-material/DragHandleOutlined';
 
 const style = {
   position: 'absolute',
@@ -18,7 +22,9 @@ const style = {
   p: 4,
 };
 
-export function LeftBodySlide({ selectedSlide, setSlide, slides, setSlides, setQuestion, setOptions }) {
+export function LeftBodySlide() {
+  const { slide: selectedSlide, setSlide, slides, setSlides, setQuestion, setOptions,
+    setHeading, setParagraph, setSubHeading } = useOutletContext();
   const [showDeleteSlideModal, setShowDeleteSlideModal] = useState(false);
 
   const menu = (
@@ -76,11 +82,6 @@ export function LeftBodySlide({ selectedSlide, setSlide, slides, setSlides, setQ
   )
 
   const handleDeleteSlide = async () => {
-    // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
-    // await axios.delete(`${SERVER_DOMAIN}/api/slides/${selectedSlide._id}`, {
-    //   withCredentials: true,
-    //   validateStatus: () => true,
-    // });
 
     await axiosInstance.delete(`/api/slides/${selectedSlide._id}`);
 
@@ -89,6 +90,27 @@ export function LeftBodySlide({ selectedSlide, setSlide, slides, setSlides, setQ
     setSlides(newSlides);
     setSlide(newSlides[0]);
     setShowDeleteSlideModal(false);
+  }
+
+  const handleClick = (slide) => {
+    setSlide(slide);
+
+    switch (slide.type) {
+      case "Multiple Choice":
+        setQuestion(slide.question);
+        setOptions(slide.options);
+        break;
+      case "Paragraph":
+        setHeading(slide.heading);
+        setParagraph(slide.paragraph);
+        break;
+      case "Heading":
+        setHeading(slide.heading);
+        setSubHeading(slide.subHeading);
+        break;
+      default:
+        break;
+    }
   }
 
   return (
@@ -101,15 +123,24 @@ export function LeftBodySlide({ selectedSlide, setSlide, slides, setSlides, setQ
         >
           <div
             className={`leftBodyItem ${selectedSlide === slide && "active"}`}
-            onClick={() => {
-              setSlide(slide);
-              setQuestion(slide.question);
-              setOptions(slide.options);
-            }}
+            onClick={() => handleClick(slide)}
           >
-            <ItemLeftBody
-              slide={slide}
-            />
+            {slide.type === "Multiple Choice" ? (
+              <ItemLeftBody
+                icon={EqualizerOutlinedIcon}
+                text={slide.question}
+              />
+            ) : slide.type === "Paragraph" ? (
+              <ItemLeftBody
+                icon={SegmentOutlinedIcon}
+                text={slide.heading}
+              />
+            ) : (
+              <ItemLeftBody
+                icon={DragHandleOutlinedIcon}
+                text={slide.heading}
+              />
+            )}
           </div>
         </Dropdown>
       ))

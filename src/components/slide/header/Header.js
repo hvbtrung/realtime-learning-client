@@ -1,10 +1,14 @@
 import "./header.scss";
-import { Tooltip, IconButton, Box, Typography, Button, Modal, TextField } from "@mui/material";
+import { Tooltip, IconButton, Box, Typography, Button, Modal } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useState } from "react";
 import axiosInstance from "../../../utils/axiosInstance";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import SlideType from "../slideType/SlideType";
+import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
+import SegmentOutlinedIcon from '@mui/icons-material/SegmentOutlined';
+import DragHandleOutlinedIcon from '@mui/icons-material/DragHandleOutlined';
 
 const style = {
   position: 'absolute',
@@ -18,53 +22,124 @@ const style = {
   p: 4,
 };
 
-export default function HeaderSlide({ presentation, slides, setSlides, setSlide, setPresent, setQuestion, setOptions }) {
+export default function HeaderSlide({ presentation }) {
   const [showAddSlideModal, setShowAddSlideModal] = useState(false);
-  const [question, setQuestionAdd] = useState(null);
-  const [options, setOptionsAdd] = useState([{ name: "", counter: 0 }]);
+  const [slideType, setSlideType] = useState("Heading");
+
+  const { slides, setSlides, slide, setSlide, setQuestion, setOptions, setHeading,
+    setParagraph, setSubHeading, setPresent, groupId, setGroupId } = useOutletContext();
 
   const navigate = useNavigate();
 
-  const handleAddOption = () => {
-    setOptionsAdd([...options, { name: "", counter: 0 }]);
+  const handleMultipleChoice = () => {
+    setSlideType("Multiple Choice");
   }
 
-  const handleRemoveOption = (index) => {
-    const newOptions = [...options];
-    newOptions.splice(index, 1);
-    setOptionsAdd(newOptions);
+  const handleParagraph = () => {
+    setSlideType("Paragraph");
   }
 
-  const handleOptionChange = (e, index) => {
-    options[index] = { name: e.target.value, counter: 0 };
-    setOptionsAdd([...options]);
+  const handleHeading = () => {
+    setSlideType("Heading");
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const data = {
-      question,
-      options,
-      presentationId: presentation._id
+  const handleAddSlide = async () => {
+    let data = {
+      presentationId: presentation._id,
+      type: slideType
     }
 
-    // const SERVER_DOMAIN = process.env.REACT_APP_API_URL;
-    // const res = await axios.post(`${SERVER_DOMAIN}/api/slides`, data, {
-    //   withCredentials: true,
-    //   validateStatus: () => true,
-    // });
+    switch (slideType) {
+      case "Multiple Choice":
+        const options = [
+          {
+            name: "Option 1",
+            counter: 0
+          },
+          {
+            name: "Option 2",
+            counter: 0
+          },
+          {
+            name: "Option 3",
+            counter: 0
+          },
+        ];
+
+        data = {
+          ...data,
+          question: "Multiple Choice",
+          options,
+        }
+        break;
+      case "Paragraph":
+        const headingp = "Slide with paragraph";
+        const paragraph = "Use this paragraph to explain something in detail";
+
+        data = {
+          ...data,
+          headingp,
+          paragraph,
+        }
+        break;
+      case "Heading":
+        const headingh = "Slide with heading";
+        const subHeading = "Subheading";
+
+        data = {
+          ...data,
+          headingh,
+          subHeading,
+        }
+        break;
+      default:
+        break;
+    }
 
     const res = await axiosInstance.post(`/api/slides`, data);
 
     const slide = res.data.data;
     setSlides([...slides, slide]);
-    setQuestionAdd("");
-    setOptionsAdd([{ name: "", counter: 0 }]);
     setSlide(slide);
-    setQuestion(slide.question);
-    setOptions(slide.options);
+
+    switch (slide.type) {
+      case "Multiple Choice":
+        setQuestion(slide.question);
+        setOptions(slide.options);
+        break;
+      case "Paragraph":
+        setHeading(slide.heading);
+        setParagraph(slide.paragraph);
+        break;
+      case "Heading":
+        setHeading(slide.heading);
+        setSubHeading(slide.subHeading);
+        break;
+      default:
+        break;
+    }
+
     setShowAddSlideModal(false);
+  }
+
+  const handlePublicPresent = async () => {
+    setPresent(true);
+    setGroupId("000000000000000000000000");
+
+    const presentationsData = {
+      isPresent: true,
+      isPublic: true
+    }
+
+    await axiosInstance.patch(`/api/presentations/${presentation._id}`, presentationsData);
+
+    const groupPresentationSlidesData = {
+      presentationId: presentation._id,
+      groupId: "000000000000000000000000",
+      currentSlideId: slide._id,
+    }
+
+    await axiosInstance.post(`/api/groupPresentationSlides`, groupPresentationSlidesData);
   }
 
   return (
@@ -91,14 +166,32 @@ export default function HeaderSlide({ presentation, slides, setSlides, setSlide,
         <Box className="HeaderSlide__Center">
           {presentation.title}
         </Box>
-        <Box className="HeaderSlide__Right">
-          <Button
-            sx={{ ml: 3 }}
-            variant="outlined"
-            onClick={() => setPresent(true)}
-          >
-            <PlayArrowIcon /> Present
-          </Button>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box className="HeaderSlide__Right">
+            <Button
+              sx={{ ml: 3 }}
+              variant="outlined"
+              onClick={handlePublicPresent}
+            >
+              <PlayArrowIcon /> Public Present
+            </Button>
+          </Box>
+          <Box className="HeaderSlide__Right">
+            <Button
+              sx={{ ml: 3 }}
+              variant="outlined"
+              onClick={() => setPresent(true)}
+            >
+              <PlayArrowIcon /> Group Present
+            </Button>
+          </Box>
         </Box>
       </Box>
 
@@ -113,49 +206,39 @@ export default function HeaderSlide({ presentation, slides, setSlides, setSlide,
             Add New Slide
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            <form className="headerSlideForm" onSubmit={handleSubmit}>
-              <TextField
-                id="outlined-basic"
-                label="Question"
-                variant="outlined"
-                sx={{ width: "100%", mb: 2 }}
-                value={question}
-                onChange={e => setQuestionAdd(e.target.value)}
-              />
-              <div>
-                {options.map((option, index) => {
-                  return (
-                    <div key={index}>
-                      <TextField
-                        id="outlined-basic"
-                        label="Option"
-                        variant="outlined"
-                        sx={{ width: "70%", mb: 2 }}
-                        value={option.name}
-                        onChange={(e) => handleOptionChange(e, index)}
-                      />
-                      {index === options.length - 1 ? (
-                        <Button
-                          variant="outlined"
-                          sx={{ m: 1 }}
-                          onClick={handleAddOption}
-                        >
-                          Add Option
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="outlined"
-                          sx={{ m: 1 }}
-                          color="error"
-                          onClick={() => handleRemoveOption(index)}
-                        >
-                          Remove
-                        </Button>
-                      )}
-                    </div>
-                  )
-                })}
+            <div className="headerSlideForm">
+              <div className="slideTypeContainer">
+                <div
+                  className="slideTypeWrapper"
+                  onClick={() => handleMultipleChoice()}
+                >
+                  <SlideType
+                    icon={EqualizerOutlinedIcon}
+                    name={"Multipe Choice"}
+                  />
+                </div>
+
+                <div
+                  className="slideTypeWrapper"
+                  onClick={() => handleParagraph()}
+                >
+                  <SlideType
+                    icon={SegmentOutlinedIcon}
+                    name={"Paragraph"}
+                  />
+                </div>
+
+                <div
+                  className="slideTypeWrapper"
+                  onClick={() => handleHeading()}
+                >
+                  <SlideType
+                    icon={DragHandleOutlinedIcon}
+                    name={"Heading"}
+                  />
+                </div>
               </div>
+
               <div className="newSlideBtn">
                 <Button
                   type="button"
@@ -165,9 +248,16 @@ export default function HeaderSlide({ presentation, slides, setSlides, setSlide,
                 >
                   Cancel
                 </Button>
-                <Button type="submit" variant="contained">Add SLide</Button>
+
+                <Button
+                  type="submit"
+                  variant="contained"
+                  onClick={() => handleAddSlide()}
+                >
+                  Add SLide
+                </Button>
               </div>
-            </form>
+            </div>
           </Typography>
         </Box>
       </Modal>

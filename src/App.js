@@ -13,6 +13,8 @@ import { Presentation } from "./components/presentation/Presentation";
 import Slides from "./components/slide/Slides";
 import Profile from "./pages/profile/Profile";
 import PresentationExecute from "./pages/presentationExecute/PresentationExecute";
+import SlideLayout from "./components/slide/slideLayout/SlideLayout";
+import ResultSlide from "./components/slide/resultSlide/ResultSlide";
 
 function App() {
   const { user } = useAuthContext();
@@ -49,19 +51,28 @@ function App() {
               }
             />
 
-            <Route
-              path="/presentations"
-              element={user ? <Presentation /> : <Navigate to="/login" />}
-            />
+            <Route path="/presentations">
+              <Route
+                index
+                element={user ? <Presentation /> : <Navigate to="/login" />}
+              />
+
+              <Route path=":presentationId" element={<SlideLayout />}>
+                <Route
+                  path="slides"
+                  element={user ? <Slides /> : <Navigate to="/login" />}
+                />
+
+                <Route
+                  path="execute"
+                  element={user ? <PresentationExecute /> : <Navigate to="/login" />}
+                />
+              </Route>
+            </Route>
 
             <Route
-              path="/presentations/:presentationId/slides"
-              element={user ? <Slides /> : <Navigate to="/login" />}
-            />
-
-            <Route
-              path="/presentations/:presentationId/execute"
-              element={<PresentationExecute />}
+              path="slides/:slideId/result"
+              element={user ? <ResultSlide /> : <Navigate to="/login" />}
             />
 
             <Route

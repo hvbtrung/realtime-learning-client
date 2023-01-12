@@ -6,6 +6,15 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+
+    .slideTypeContainer {
+        display: flex;
+        gap: 8px;
+
+        .slideTypeWrapper {
+            width: 33.33%;
+        }
+    }
 }
 
 .newSlideBtn {
