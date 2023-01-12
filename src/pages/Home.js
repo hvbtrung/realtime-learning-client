@@ -10,7 +10,7 @@ const Home = () => {
   const { groups } = useContext(GroupContext);
 
   return (
-    <React.Fragment>
+    groups && <React.Fragment>
       {groups.length === 0 ? (
         <h3>You don't join any group</h3>
       ) : (

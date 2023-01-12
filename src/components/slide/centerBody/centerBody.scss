@@ -4,10 +4,14 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
+    position: relative;
 
     .goTo {
-
+        position: absolute;
+        top: 0;
+        left: 25%;
     }
 
     .centerBody {
@@ -21,5 +25,25 @@
         margin: 20px 10px 60px 10px;
         width: 80%;
         height: 80%;
+    }
+
+    .centerBodyItem {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .centerBodyHeading {
+            font-weight: 500;
+            font-size: 34px;
+            padding: 15px 0;
+        }
+
+        .centerBodyParagraph,
+        .centerBodySubHeading {
+            width: 50%;
+            line-height: 150%;
+            text-align: center;
+        }
     }
 }

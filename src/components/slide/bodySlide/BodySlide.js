@@ -2,28 +2,15 @@ import "./body.scss";
 import { LeftBodySlide } from "../leftBody/LeftBody";
 import RightBody from "../rightBody/RightBody";
 import { CenterBodySlide } from "../centerBody/CenterBody";
+import { useOutletContext } from "react-router-dom";
 
-const BodySlide = ({
-  slides,
-  setSlides,
-  slide,
-  setSlide,
-  question,
-  setQuestion,
-  options,
-  setOptions,
-}) => {
+const BodySlide = () => {
+  const { slide } = useOutletContext();
+
   return slide ? (
     <div className="bodySlideWrapper">
       <div className="leftBodyContainer">
-        <LeftBodySlide
-          selectedSlide={slide}
-          setSlide={setSlide}
-          slides={slides}
-          setSlides={setSlides}
-          setQuestion={setQuestion}
-          setOptions={setOptions}
-        />
+        <LeftBodySlide />
       </div>
 
       <div className="centerBodyContainer">
@@ -31,16 +18,7 @@ const BodySlide = ({
       </div>
 
       <div className="rightBodyContainer">
-        <RightBody
-          slide={slide}
-          setSlide={setSlide}
-          slides={slides}
-          setSlides={setSlides}
-          question={question}
-          setQuestion={setQuestion}
-          options={options}
-          setOptions={setOptions}
-        />
+        <RightBody />
       </div>
     </div>
   ) : (

@@ -1,0 +1,23 @@
+.slideTypeWrapper {
+    width: 33.33%;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+    &:hover {
+        cursor: pointer;
+        border-color: #356dff;
+    }
+
+    .icon {
+        font-size: 40px;
+    }
+
+    .slideTypeText {
+        opacity: 0.8;
+    }
+}

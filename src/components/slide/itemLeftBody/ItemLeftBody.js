@@ -1,12 +1,11 @@
-import "./itemLeftBody.scss"
-import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
+import "./itemLeftBody.scss";
 
-const ItemLeftBody = ({ slide }) => {
+const ItemLeftBody = ({ icon: Icon, text }) => {
     return (
         <div className="itemLeftBodyContainer">
             <div className="itemLeftBody">
-                <EqualizerOutlinedIcon className="icon" />
-                <span className="text">{slide.question}</span>
+                <Icon className="icon" />
+                <span className="text">{text}</span>
             </div>
         </div>
     );
