@@ -2,7 +2,15 @@ import "./leftBody.scss";
 import ItemLeftBody from "../itemLeftBody/ItemLeftBody";
 import { Box, Typography, Button, Modal } from "@mui/material";
 import { Dropdown, Menu } from "antd";
-import { CopyOutlined, DeleteOutlined, FacebookFilled, GithubFilled, GoogleCircleFilled, ReloadOutlined, ShareAltOutlined } from "@ant-design/icons";
+import {
+  CopyOutlined,
+  DeleteOutlined,
+  FacebookFilled,
+  GithubFilled,
+  GoogleCircleFilled,
+  ReloadOutlined,
+  ShareAltOutlined,
+} from "@ant-design/icons";
 import { useState } from "react";
 import axiosInstance from "../../../utils/axiosInstance";
 import { useOutletContext } from "react-router-dom";
@@ -11,13 +19,13 @@ import SegmentOutlinedIcon from '@mui/icons-material/SegmentOutlined';
 import DragHandleOutlinedIcon from '@mui/icons-material/DragHandleOutlined';
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 600,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
@@ -42,7 +50,7 @@ export function LeftBodySlide() {
         {
           label: "Copy",
           key: "copy",
-          icon: <CopyOutlined />
+          icon: <CopyOutlined />,
         },
         {
           label: "Share",
@@ -52,45 +60,47 @@ export function LeftBodySlide() {
             {
               label: "Facebook",
               key: "fb",
-              icon: <FacebookFilled />
+              icon: <FacebookFilled />,
             },
             {
               label: "Github",
               key: "gh",
-              icon: <GithubFilled />
+              icon: <GithubFilled />,
             },
             {
               label: "Google",
               key: "gg",
-              icon: <GoogleCircleFilled />
+              icon: <GoogleCircleFilled />,
             },
           ],
         },
         {
           label: "Reload",
           key: "reload",
-          icon: <ReloadOutlined />
+          icon: <ReloadOutlined />,
         },
         {
           label: "Delete",
           key: "delete",
           danger: true,
-          icon: <DeleteOutlined />
+          icon: <DeleteOutlined />,
         },
       ]}
     ></Menu>
-  )
+  );
 
   const handleDeleteSlide = async () => {
 
     await axiosInstance.delete(`/api/slides/${selectedSlide._id}`);
 
     let newSlides = [...slides];
-    newSlides = newSlides.filter((newSlide) => newSlide._id !== selectedSlide._id);
+    newSlides = newSlides.filter(
+      (newSlide) => newSlide._id !== selectedSlide._id
+    );
     setSlides(newSlides);
     setSlide(newSlides[0]);
     setShowDeleteSlideModal(false);
-  }
+  };
 
   const handleClick = (slide) => {
     setSlide(slide);
@@ -116,11 +126,7 @@ export function LeftBodySlide() {
   return (
     <div className="leftBodyContainer">
       {slides.map((slide, index) => (
-        <Dropdown
-          overlay={menu}
-          trigger={["contextMenu"]}
-          key={index}
-        >
+        <Dropdown overlay={menu} trigger={["contextMenu"]} key={index}>
           <div
             className={`leftBodyItem ${selectedSlide === slide && "active"}`}
             onClick={() => handleClick(slide)}
@@ -143,8 +149,7 @@ export function LeftBodySlide() {
             )}
           </div>
         </Dropdown>
-      ))
-      }
+      ))}
 
       <Modal
         open={showDeleteSlideModal}
@@ -179,6 +184,6 @@ export function LeftBodySlide() {
           </div>
         </Box>
       </Modal>
-    </div >
+    </div>
   );
 }

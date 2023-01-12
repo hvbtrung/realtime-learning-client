@@ -1,18 +1,30 @@
 import "./slide.scss";
-import { Box, Button } from "@mui/material";
+import TextsmsIcon from "@mui/icons-material/Textsms";
+import { Box, Button, Tooltip, IconButton } from "@mui/material";
 import HeaderSlide from "./header/Header";
 import BodySlide from "./bodySlide/BodySlide";
 import { CenterBodySlide } from "./centerBody/CenterBody";
 import { useLocation, useOutletContext, useParams } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { io } from "socket.io-client";
+import HelpIcon from "@mui/icons-material/Help";
+import ChatScreen from "../chat/ChatScreen";
+import QuestionScreen from "../question/QuestionScreen";
 
+import CustomizedSnackbars from "../notification/snackbars";
 export default function Slides() {
   const location = useLocation();
+
+  const [isOpenChat, setIsOpenChat] = useState(false);
+  const [isOpenQuestion, setIsOpenQuestion] = useState(false);
+  const [typeNotification, setTypeNotification] = useState(null);
+  const [messageNotification, setMessageNotification] = useState("");
+  const [isAppearNotification, setIsAppearNotification] = useState(false);
+
   const presentation = location.state;
   const params = useParams();
   const { user } = useAuthContext();
@@ -26,7 +38,9 @@ export default function Slides() {
   useEffect(() => {
     const getSlides = async () => {
 
-      const res = await axiosInstance.get(`/api/presentations/${params.presentationId}/slides`);
+      const res = await axiosInstance.get(
+        `/api/presentations/${params.presentationId}/slides`
+      );
 
       const slides = res.data.data;
       setSlides(slides);
@@ -49,7 +63,7 @@ export default function Slides() {
             break;
         }
       }
-    }
+    };
 
     getSlides();
   }, [params.presentationId, setHeading, setOptions, setParagraph, setQuestion, setSlide, setSlides, setSubHeading]);
@@ -96,7 +110,7 @@ export default function Slides() {
       default:
         break;
     }
-  }
+  };
 
   const handleLeftClick = async () => {
     const index = slides.indexOf(slide);
@@ -130,7 +144,23 @@ export default function Slides() {
 
       await axiosInstance.patch(`/api/groupPresentationSlides/${presentation._id}/${groupId}`, groupPresentationSlidesData);
     }
-  }
+  };
+
+  const closeQuestionDialog = () => {
+    setIsOpenQuestion(false);
+  };
+
+  const openQuestionDialog = () => {
+    setIsOpenQuestion(true);
+  };
+
+  const closeChatDialog = () => {
+    setIsOpenChat(false);
+  };
+
+  const openChatDialog = () => {
+    setIsOpenChat(true);
+  };
 
   const handleStopPresent = async () => {
     setPresent(false);
@@ -146,9 +176,7 @@ export default function Slides() {
   }
 
   return (
-    <div
-      className="slideContainer"
-    >
+    <div className="slideContainer">
       {slides && (
         <Box className="slides">
           {present ? (
@@ -157,7 +185,8 @@ export default function Slides() {
                 <div className="presentSlideWrapper">
                   <div onClick={handleLeftClick}>
                     <ArrowCircleLeftOutlinedIcon
-                      className={`icon ${slides.indexOf(slide) === 0 && "unactive"}`}
+                      className={`icon ${slides.indexOf(slide) === 0 && "unactive"
+                        }`}
                     />
                   </div>
 
@@ -167,9 +196,60 @@ export default function Slides() {
 
                   <div onClick={handleRightClick}>
                     <ArrowCircleRightOutlinedIcon
-                      className={`icon ${slides.indexOf(slide) === slides.length - 1 && "unactive"}`}
+                      className={`icon ${slides.indexOf(slide) === slides.length - 1 &&
+                        "unactive"
+                        }`}
                     />
                   </div>
+                </div>
+                <div className="slideInteraction">
+                  <div className="slideInteraction__item">
+                    <Tooltip
+                      onClick={() => {
+                        openQuestionDialog();
+                      }}
+                      className="slideInteraction__item--containIcon"
+                    >
+                      <IconButton>
+                        <HelpIcon className="slideInteraction__item--icon" />
+                      </IconButton>
+                    </Tooltip>
+
+                    <QuestionScreen
+                      isOpenQuestion={isOpenQuestion}
+                      closeQuestionDialog={closeQuestionDialog}
+                    />
+                  </div>
+                  <div className="slideInteraction__item">
+                    <Tooltip
+                      onClick={() => {
+                        setIsOpenChat(true);
+                      }}
+                      className="slideInteraction__item--containIcon"
+                    >
+                      <IconButton>
+                        <TextsmsIcon className="slideInteraction__item--icon" />
+                      </IconButton>
+                    </Tooltip>
+
+                    <ChatScreen
+                      isOpenChat={isOpenChat}
+                      openChatDialog={openChatDialog}
+                      closeChatDialog={closeChatDialog}
+                      setTypeNotification={setTypeNotification}
+                      setMessageNotification={setMessageNotification}
+                      setIsAppearNotification={setIsAppearNotification}
+                      isAppearNotification={isAppearNotification}
+                    />
+                  </div>
+                  {typeNotification && (
+                    <CustomizedSnackbars
+                      key={"chatNotify"}
+                      type={typeNotification}
+                      status={isAppearNotification}
+                      message={messageNotification}
+                    />
+                  )}
                 </div>
                 <Button
                   variant="outlined"

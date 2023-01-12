@@ -1,0 +1,121 @@
+#Question-Dialog-Title{
+    border-bottom: 0.15px solid #efefef;
+}
+
+.questionContent{
+    min-height: 60vh;
+    max-height: 60vh;
+    min-width: 600px;
+    max-width: 600px;
+    .disable{
+        background: #f2f2f2 !important;
+        color: white !important;;
+        
+    }
+   
+    &__select{
+        margin-right:0;
+        text-align: right;
+        font-size: 10px;
+        height: 10px;
+        margin-bottom: 60px;
+
+        &--form{
+            font-size:10px;
+        }
+    }
+
+    &__item{
+
+        display:flex;
+        flex-direction: row;
+        margin-top:40px;
+        &--left{
+            display: inherit;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            min-width: 40px;
+            max-width: 40px;
+
+            
+        }
+
+        &--secondaryTitle{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        &--center{
+        
+         padding:10px;
+         margin-right:20px;
+         min-width: 86%;
+         max-width: 86%;
+         
+        }
+
+        &--center:hover, &--center:focus{
+            background-color: #efefef;
+            border-radius: 5px;
+        }
+        &--content{
+     
+            padding-top: 8px;
+        }
+
+        &--Name{
+            font-weight:500;
+        }
+        &--isAnswered{
+            text-align: center;
+            border-radius: 10px;
+            padding:5px;
+            color:white;
+            min-width: 90px;
+            background-color: #6a994e;
+            cursor: pointer;
+        }
+        &--isAnswered:active{
+            opacity: 0.85;
+            transform: translateY(0.5px);
+            transition: all  .5s;
+        }
+
+        &--voteItem{
+            color:#6a994e !important;
+        }
+
+       
+    }
+}
+
+.QuestionInput{
+
+    &--icon{
+        color:#6a994e !important;
+        margin-right: 5px !important;
+        margin-bottom: 10px !important;
+        // font-size: 18px        
+   
+       
+    }
+    &--content{
+        min-width: 86%;
+        border:0.15px solid #cfcfcf;
+        // box-shadow: #ccc;
+        // outline:#;
+        border-radius: 20px;
+        outline: none;
+        margin-left: 15px;
+        padding:15px 10px;
+        font-size: 16px;
+
+    }
+
+    &--content:focus{
+        border:0.15px solid #6a994e;
+    }
+}
+

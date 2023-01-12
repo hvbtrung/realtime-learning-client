@@ -18,8 +18,10 @@ import {
   Typography,
 } from "@mui/material";
 import { EditButton } from "./EditPresentation";
+import { usePresentationContext } from "../../hooks/usePresentationContext";
 
 export function BodyPres() {
+  const { typePresentation } = usePresentationContext();
   const navigate = useNavigate();
 
   const { isAppearNotification, typeNotification, messageNotification } =
@@ -30,12 +32,9 @@ export function BodyPres() {
 
   const getAllPresentations = async () => {
     try {
-      // const res = await axios.get(`${SERVER_DOMAIN}/api/presentations`, {
-      //   withCredentials: true,
-      //   validateStatus: () => true,
-      // });
-
-      const res = await axiosInstance.get(`/api/presentations`);
+      const res = await axiosInstance.get(
+        `/api/presentations?type=${typePresentation}`
+      );
 
       let presentations = res.data.presentations;
       for (let presentation of presentations) {
@@ -50,11 +49,14 @@ export function BodyPres() {
 
   useEffect(() => {
     getAllPresentations();
+    // eslint-disable-next-line
   }, [isReload]);
 
   const handleClick = (presentation) => {
-    navigate(`/presentations/${presentation._id}/slides`, { state: presentation });
-  }
+    navigate(`/presentations/${presentation._id}/slides`, {
+      state: presentation,
+    });
+  };
 
   return (
     <div>
@@ -94,7 +96,10 @@ export function BodyPres() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    <span onClick={() => handleClick(row)} style={{ cursor: "pointer" }}>
+                    <span
+                      onClick={() => handleClick(row)}
+                      style={{ cursor: "pointer" }}
+                    >
                       {row.title}
                     </span>
                   </TableCell>
@@ -114,7 +119,7 @@ export function BodyPres() {
         </TableContainer>
       ) : (
         <Typography variant="h6" gutterBottom>
-          You don't create any presentation
+          You don't have any presentations !!!
         </Typography>
       )}
     </div>

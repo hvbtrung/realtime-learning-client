@@ -1,7 +1,7 @@
 // import axios from "axios";
 // import { useState } from "react";
 import { useContext } from "react";
-import GroupCard from "../components/customize/GroupCard";
+import GroupCard from "../components/groupCard/GroupCard";
 import * as React from "react";
 import Grid from "@mui/material/Grid";
 import { GroupContext } from "../context/GroupContext";
@@ -10,7 +10,7 @@ const Home = () => {
   const { groups } = useContext(GroupContext);
 
   return (
-    <React.Fragment>
+    groups && <React.Fragment>
       {groups.length === 0 ? (
         <h3>You don't join any group</h3>
       ) : (
